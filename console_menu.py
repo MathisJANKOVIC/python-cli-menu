@@ -1,4 +1,3 @@
-import colorama
 import msvcrt
 import os
 
@@ -7,9 +6,19 @@ class Keys:
     ARROW_DOWN = b"P"
     ENTER = b'\r'
 
+ANSI_BG_COLORS = {
+    "red": "\033[41m",
+    "green": "\033[42m",
+    "yellow": "\033[43m",
+    "blue": "\033[44m",
+    "magenta": "\033[45m",
+    "cyan": "\033[46m",
+    "white": "\033[47m"
+}
+
 def console_menu(title: str, options: tuple | list, cursor_color: str) -> str :
     """Creates a console GUI menu with a cursor and returns the selected option. Use arrow keys to move the cursor.
-    Cursor colors available : black, red, green, yellow, blue, magenta, cyan, white, lightblack, lightred, lightgreen, lightyellow, lightblue, lightmagenta, lightcyan, lightwhite"""
+    Cursor colors available : red, green, yellow, blue, magenta, cyan. You can use a custom color by specify ANSI color code using octal escape code '\\033'"""
 
     TERMINAL_HEIGHT = os.get_terminal_size().lines
     TERMINAL_WIDTH = os.get_terminal_size().columns
@@ -18,17 +27,12 @@ def console_menu(title: str, options: tuple | list, cursor_color: str) -> str :
     cursor_height = VERTICAL_SPACING
     key = None
 
-    if("light" in cursor_color):
-        colorama_cursor_color = cursor_color.upper() + "_EX"
-    else:
-        colorama_cursor_color = cursor_color.upper()
+    if(not cursor_color.startswith("\033[")):
+        cursor_color = ANSI_BG_COLORS.get(cursor_color)
+        if(cursor_color == None):
+            raise ValueError(f"'{cursor_color}' is not a valid option for cursor color, please check the function documentation")
 
-    try:
-        colorama_color = getattr(colorama.Back, colorama_cursor_color)
-    except AttributeError:
-        raise ValueError(f"'{cursor_color}' is not a valid option for cursor color, please check the function doc")
-
-    os.system("cls" if os.name == 'nt' else "clear")
+    os.system("cls" if os.name == "nt" else "clear")
     print('\033[?25l', end="") # Hides cursor
 
     while(key != Keys.ENTER):
@@ -38,7 +42,7 @@ def console_menu(title: str, options: tuple | list, cursor_color: str) -> str :
 
         for i, option in enumerate(options):
             if(i + VERTICAL_SPACING == cursor_height):
-                print(colorama_color + option.center(TERMINAL_WIDTH) + colorama.Back.BLACK)
+                print(cursor_color + option.center(TERMINAL_WIDTH) + "\033[0m")
             else:
                 print(option.center(TERMINAL_WIDTH))
 
@@ -65,5 +69,5 @@ def console_menu(title: str, options: tuple | list, cursor_color: str) -> str :
 
 if(__name__ == "__main__"):
     OPTIONS = ["Option 1", "Option 2", "Option 3", "Quit"]
-    choice = console_menu("Welcome", OPTIONS, "lightblue")
+    choice = console_menu("Welcome", OPTIONS, "green")
     print(choice)

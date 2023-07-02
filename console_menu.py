@@ -44,7 +44,7 @@ def console_menu(title: str, options: tuple | list, cursor_color: str) -> str :
             if(i + VERTICAL_SPACING == cursor_height):
                 print("  " + cursor_color + option.center(TERMINAL_WIDTH - 2) + "\033[0m")
             else:
-                print("  " + option.center(TERMINAL_WIDTH-2))
+                print("  " + option.center(TERMINAL_WIDTH - 2))
 
         key = msvcrt.getch()
 

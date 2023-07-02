@@ -32,4 +32,4 @@ To use the librairy you can simply download the file and move it in your project
 
     1. Download and extract the zip or clone the project
     2. Select and copy the file console_menu.py
-    3. Navigate and paste the file into your python library directory (usually in "C:\Program Files\Python\Lib")
+    3. Navigate and paste the file into your python library directory (usually in "Program Files\Python\Lib")

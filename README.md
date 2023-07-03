@@ -4,7 +4,7 @@ Console GUI Menu is Python module that allows you to easilly create a graphical 
 
 The module provides a function that allows you to create the menu and custom the title, options and cursor color. The function returns the selected option. Available colors are red, green, yellow, blue, magenta, cyan. You can also use a custom color by specifing ANSI color code using octal escape code starting with '\033'.
 
-<br>![qsd](/screen_menu.png)
+![qsd](/screen_menu.png)
 
 ## Quickstart
 

@@ -17,19 +17,19 @@ OPTIONS = ["Option 1", "Option 2", "Option 3", "Quit"]
 choice1 = cm.console_menu(title="Amazing Console Menu", options=OPTIONS, cursor_color="blue")
 
 # Creates a console menu with white cursor
-choice2 = cm.console_menu(title="Amazing Console Menu", options=OPTIONS, cursor_color="\033[47m")
+choice2 = cm.console_menu(title="Amazing Console Menu 2", options=OPTIONS, cursor_color="\033[47m")
 
 print(choice1) # output : "Option 1"
 ```
 
 ## Requirements
-- Python
 - Git (optionnal)
+- Python
 
 ## Configuration
 
-To use the librairy you can simply download the file and move it in your project or follow those steps to move the file into your python librairy file :
+To use the librairy you can simply download console_menu.py and move it in your project or move the file into your python librairy directory to use the module everywhere. Here are common locations for python librairies directory where XX stands for your python version :
 
-    1. Download and extract the zip or clone the project
-    2. Select and copy the file console_menu.py
-    3. Navigate and paste the file into your python library directory (usually in "Program Files\Python\Lib")
+- Windows : ```C:\Program Files\PythonXX\Lib``` or ```C:\Users\Username\AppData\Local\Programs\Python\PythonXX\Lib```
+- MacOS : ```~/Library/Python/X.X/lib/pythonX.X``` or ```/Library/Frameworks/Python.framework/Versions/XX/lib/pythonXX```
+- Linux : ```/usr/lib/pythonXX```

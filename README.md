@@ -31,5 +31,5 @@ print(choice1) # output : "Option 1"
 To use the librairy you can simply download console_menu.py and move it in your project or move the file into your python librairy directory to use the module everywhere. Here are common locations for python librairies directory where XX stands for your python version :
 
 - Windows : ```C:\Program Files\PythonXX\Lib``` or ```C:\Users\Username\AppData\Local\Programs\Python\PythonXX\Lib```
-- MacOS : ```~/Library/Python/X.X/lib/pythonX.X``` or ```/Library/Frameworks/Python.framework/Versions/XX/lib/pythonXX```
+- MacOS : ```~/Library/Python/XX/lib/pythonX.X``` or ```/Library/Frameworks/Python.framework/Versions/XX/lib/pythonXX```
 - Linux : ```/usr/lib/pythonXX```

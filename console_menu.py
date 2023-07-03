@@ -1,3 +1,4 @@
+import readline
 import msvcrt
 import os
 
@@ -33,6 +34,7 @@ def console_menu(title: str, options: tuple | list, cursor_color: str) -> str :
             raise ValueError(f"'{cursor_color}' is not a valid option for cursor color please check the function documentation.")
 
     os.system("cls" if os.name == "nt" else "clear")
+
     print('\033[?25l', end="") # Hides cursor
 
     while(key != Keys.ENTER):
@@ -46,7 +48,7 @@ def console_menu(title: str, options: tuple | list, cursor_color: str) -> str :
             else:
                 print("  " + option.center(TERMINAL_WIDTH - 2))
 
-        key = msvcrt.getch()
+        key = msvcrt.getch() if(os.name == "nt") else readline.getch()
 
         if(key == Keys.ARROW_UP):
             if(cursor_height > VERTICAL_SPACING):

@@ -22,7 +22,7 @@ def console_menu(title: str, options: tuple | list, cursor_color: str) -> str :
     TERMINAL_HEIGHT = os.get_terminal_size().lines
     TERMINAL_WIDTH = os.get_terminal_size().columns
 
-    VERTICAL_SPACING = (TERMINAL_HEIGHT - len(options) + 2) // 2
+    VERTICAL_SPACING = (TERMINAL_HEIGHT - len(options)) // 2
     cursor_height = VERTICAL_SPACING
     key = None
 

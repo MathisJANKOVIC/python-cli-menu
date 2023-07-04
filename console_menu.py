@@ -1,5 +1,3 @@
-import readline
-import msvcrt
 import os
 
 class Keys:
@@ -24,7 +22,7 @@ def console_menu(title: str, options: tuple | list, cursor_color: str) -> str :
     TERMINAL_HEIGHT = os.get_terminal_size().lines
     TERMINAL_WIDTH = os.get_terminal_size().columns
 
-    VERTICAL_SPACING = (TERMINAL_HEIGHT - len(options)) // 2
+    VERTICAL_SPACING = (TERMINAL_HEIGHT - len(options) + 2) // 2
     cursor_height = VERTICAL_SPACING
     key = None
 
@@ -39,16 +37,21 @@ def console_menu(title: str, options: tuple | list, cursor_color: str) -> str :
 
     while(key != Keys.ENTER):
         print("\n"*(VERTICAL_SPACING - 3))
-        print("  " + title.center(TERMINAL_WIDTH - 2))
+        print(" " + title.center(TERMINAL_WIDTH - 1))
         print("\n")
 
         for i, option in enumerate(options):
             if(i + VERTICAL_SPACING == cursor_height):
-                print("  " + cursor_color + option.center(TERMINAL_WIDTH - 2) + "\033[0m")
+                print(" " + cursor_color + option.center(TERMINAL_WIDTH - 1) + "\033[0m")
             else:
-                print("  " + option.center(TERMINAL_WIDTH - 2))
+                print(" " + option.center(TERMINAL_WIDTH - 1))
 
-        key = msvcrt.getch() if(os.name == "nt") else readline.getch()
+        if(os.name == "nt"):
+            import msvcrt
+            key = msvcrt.getch()
+        else:
+            import readline
+            readline.getch()
 
         if(key == Keys.ARROW_UP):
             if(cursor_height > VERTICAL_SPACING):
@@ -62,7 +65,9 @@ def console_menu(title: str, options: tuple | list, cursor_color: str) -> str :
                 cursor_height = VERTICAL_SPACING
 
         print("\033[F" * (len(options) + VERTICAL_SPACING + 3), end="")
-    print('\033[? 25h', end="")
+
+    print('\033[?25h', end="") # show cursor
+    os.system("cls" if os.name == "nt" else "clear")
 
     return options[cursor_height - VERTICAL_SPACING]
 

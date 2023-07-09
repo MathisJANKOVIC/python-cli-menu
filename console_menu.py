@@ -27,7 +27,7 @@ def console_menu(title: str, options: tuple | list, cursor_color: str) -> str :
     key = None
 
     if(not cursor_color.startswith("\033")):
-        if(ANSI_BG_COLORS.get(cursor_color) != None):
+        if(ANSI_BG_COLORS.get(cursor_color) == None):
             raise ValueError(f"'{cursor_color}' is not a valid option for cursor color please check the function documentation.")
         else:
             cursor_color = ANSI_BG_COLORS.get(cursor_color)

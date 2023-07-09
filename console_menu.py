@@ -27,9 +27,10 @@ def console_menu(title: str, options: tuple | list, cursor_color: str) -> str :
     key = None
 
     if(not cursor_color.startswith("\033")):
-        premade_cursor_color = ANSI_BG_COLORS.get(cursor_color)
-        if(premade_cursor_color == None):
+        if(ANSI_BG_COLORS.get(cursor_color) != None):
             raise ValueError(f"'{cursor_color}' is not a valid option for cursor color please check the function documentation.")
+        else:
+            cursor_color = ANSI_BG_COLORS.get(cursor_color)
 
     os.system("cls" if os.name == "nt" else "clear")
 
@@ -73,5 +74,5 @@ def console_menu(title: str, options: tuple | list, cursor_color: str) -> str :
 
 if(__name__ == "__main__"):
     OPTIONS = ["Option 1", "Option 2", "Option 3", "Quit"]
-    choice = console_menu("Amazing Console Menu", OPTIONS, "blue")
+    choice = console_menu("Amazing Console Menu", OPTIONS, "red")
     print(choice)

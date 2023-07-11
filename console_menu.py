@@ -16,7 +16,7 @@ ANSI_BG_COLORS = {
     "white": '\033[47m'
 }
 
-def menu(title: str | list | tuple, options: list | tuple, cursor_color: str) -> str :
+def create_menu(title: str | list | tuple, options: list | tuple, cursor_color: str) -> str :
     """Creates a console GUI menu with a cursor and returns the selected option. Pass a list or a tuple to 'title' to print the title on multiple lines. Use arrow keys to move the cursor.
     Cursor colors available : red, green, yellow, blue, magenta, cyan.
     You can use a custom color by specifing ANSI color code using octal escape code '\\033'. """
@@ -37,15 +37,22 @@ def menu(title: str | list | tuple, options: list | tuple, cursor_color: str) ->
     sys.stdout.write('\033[?25l') # Hides cursor
 
     if(type(title) == str):
-        title = [title]
+        title_height = 1
+    else:
+        title_height = len(title)
 
     key: bytes = None
     while(key != Keys.ENTER):
 
-        print('\n'*(VERTICAL_SPACING - len(title) - 2))
-        for line in title:
-            print(" " + line.center(TERMINAL_WIDTH - 1))
-        print('\n')
+        print('\n'*(VERTICAL_SPACING - title_height - 2))
+
+        if(type(title) == str):
+            print(" " + title.center(TERMINAL_WIDTH - 1))
+            sys.stdout.write('\n\n')
+        else:
+            for line in title:
+                print(" " + line.center(TERMINAL_WIDTH - 1))
+            sys.stdout.write('\n')
 
         for line, option in enumerate(options):
             if(line + VERTICAL_SPACING == cursor_height):
@@ -71,7 +78,7 @@ def menu(title: str | list | tuple, options: list | tuple, cursor_color: str) ->
             else:
                 cursor_height = VERTICAL_SPACING
 
-        sys.stdout.write('\033[F' * (VERTICAL_SPACING + len(option) + len(title) + 2))
+        sys.stdout.write('\033[F' * (VERTICAL_SPACING + len(option) + title_height + 2))
 
     sys.stdout.write('\033[?25h') # show cursor
     os.system("cls" if os.name == "nt" else "clear")
@@ -80,5 +87,5 @@ def menu(title: str | list | tuple, options: list | tuple, cursor_color: str) ->
 
 if(__name__ == "__main__"):
     OPTIONS = ["Option 1", "Option 2", "Option 3", "Quit"]
-    choice = menu("Amazing Console Menu", OPTIONS, "red")
+    choice = create_menu("Amazing Console Menu", OPTIONS, "red")
     print(choice)

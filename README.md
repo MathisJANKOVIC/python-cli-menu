@@ -24,7 +24,7 @@ print(choice1) # output : "Option 1"
 
 ## Requirements
 - Git (optionnal)
-- Python 3.10 +
+- Python 3.10+
 
 ## Configuration
 To use the librairy you can simply download `console_menu.py` and move it in your project or move the file into your python librairy directory to use the module everywhere. Here are common locations for python librairies directory where 'X' stands for your python version :

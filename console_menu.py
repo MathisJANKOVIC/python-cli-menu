@@ -17,7 +17,7 @@ ANSI_BG_COLORS = {
 }
 
 def create_menu(title: str | list | tuple, options: list | tuple, cursor_color: str) -> str :
-    """Creates a console GUI menu with a cursor and returns the selected option. Pass a list or a tuple to 'title' to print the title on multiple lines. Use arrow keys to move the cursor.
+    """Creates a console GUI menu with a cursor and returns the selected option. Pass a list or a tuple as the title parameter to print the title on multiple lines. Use arrow keys to move the cursor.
     Cursor colors available : red, green, yellow, blue, magenta, cyan.
     You can use a custom color by specifing ANSI color code using octal escape code '\\033'. """
 

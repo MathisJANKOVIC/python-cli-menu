@@ -1,6 +1,6 @@
 # Console-GUI-Menu
 
-Console GUI Menu is Python module that allows you to easilly create a graphical user interface menu on console without the need for any external libraries. You can navigate and select options by simply moving the cursor using arrow keys.
+Console GUI Menu is Python module that allows you to easilly create a graphical user interface menu on console without the need for external libraries. You can navigate and select options by moving the cursor using arrow keys.
 
 The module provides a function that allows you to create the menu with customizable title, options and cursor color. The function returns the selected option. You can pass a list or a tuple as the title parameter to print the title on multiple lines. Available colors are red, green, yellow, blue, magenta, cyan. You can also use a custom color by specifing ANSI color code using octal escape code starting with '\033'.
 

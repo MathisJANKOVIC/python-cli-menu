@@ -19,7 +19,7 @@ choice1 = create_menu(title="Amazing Console Menu", options=OPTIONS, cursor_colo
 # Creates a console menu with red cursor and title on multiple lines
 choice2 = create_menu(title=["Amazing Console", "Menu 2"], options=OPTIONS, cursor_color="red")
 
-# Creates a console menu with a white cursor default set on the last option
+# Creates a console menu with white cursor default set on the last option
 choice3 = create_menu(title="Amazing Console Menu", options=OPTIONS, cursor_color="\033[47m", initial_cursor_position=-1)
 
 print(choice1) # output : "Option 1"

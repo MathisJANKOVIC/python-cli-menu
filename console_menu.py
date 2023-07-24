@@ -58,18 +58,17 @@ def create_menu(title: str | list | tuple, options: list | tuple, cursor_color: 
     os.system("cls")
     sys.stdout.write("\033[?25l") # Hides cursor
 
-    key = None
-    while(key != Keys.SELECT):
-
-        if(type(title) == str):
+    if(type(title) == str):
             print('\n'*(VERTICAL_SPACING - 3))
             print(" " + title.center(TERMINAL_WIDTH - 1) + '\n\n')
-        else:
-            print('\n'*(VERTICAL_SPACING - len(title) - 1))
-            for line in title:
-                print(" " + line.center(TERMINAL_WIDTH - 1))
-            sys.stdout.write('\n')
+    else:
+        print('\n'*(VERTICAL_SPACING - len(title) - 1))
+        for line in title:
+            print(" " + line.center(TERMINAL_WIDTH - 1))
+        sys.stdout.write('\n')
 
+    key = None
+    while(key != Keys.SELECT):
         for line, option in enumerate(options):
             if(line + VERTICAL_SPACING == cursor_height):
                 print(" " + cursor_color + option.center(TERMINAL_WIDTH - 1) + '\033[0m')
@@ -89,10 +88,14 @@ def create_menu(title: str | list | tuple, options: list | tuple, cursor_color: 
             else:
                 cursor_height = VERTICAL_SPACING
 
-        sys.stdout.write('\033[F' * TERMINAL_HEIGHT)
+        sys.stdout.write('\033[F' * len(options))
 
     sys.stdout.write("\033[?25h") # show cursor
     os.system("cls")
 
     return options[cursor_height - VERTICAL_SPACING]
 
+if(__name__ == "__main__"):
+    OPTIONS = ["Option 1", "Option 2", "Option 3", "Quit"]
+    choice = create_menu("Amazing Console Menu", OPTIONS, "red")
+    print(choice)

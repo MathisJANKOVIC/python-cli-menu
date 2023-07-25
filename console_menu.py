@@ -17,19 +17,19 @@ ANSI_BG_COLORS = {
     "white": "\033[47m"
 }
 
-def create_menu(title: str | list | tuple, options: list | tuple, cursor_color: str, initial_cursor_position: int | str = 0) -> str:
-    """Creates a GUI menu in console with a cursor that can be controlled by arrow keys. Clears console once user have selected an option.
+def menu(title: str | list[str] | tuple[str, ...], options: list[str] | tuple[str, ...], cursor_color: str, initial_cursor_position: str | int = 0, output_format: type = str) -> str | int:
+    """Creates a console GUI menu with arrow key navigation. Clears console once user have selected an option.
 
     Args:
        - title : Main title of the menu. Pass a list or a tuple to print it on multiple lines.
        - options : Choices or actions that users can select.
-       - cursor_color : Color of the cursor. Available colors are red, green, yellow, blue, magenta and cyan.
-                        Use custom color by specifying ANSI color code using escape code '\\033'.
-       - initial_cursor_position (optional) : Index of element or element in the list where the initial cursor position
-                                              is set (default position is the first element).
+       - cursor_color : Color of the cursor. Available colors are red, green, yellow, blue, magenta, cyan and white.
+                        Use custom color by specifying ANSI color code using escape code \\033.
+       - initial_cursor_position (optional) : Index of element or element in options list where the initial cursor position is set (default position is the first element).
+       - output_format (optionnal) : Output type of the function. Default is str, which returns the selected element from the options list. Pass int to get the index of the selected element.
 
     Returns:
-       - str : element from the options list that is selected by the user """
+       - str | int : Returns the element from options list selected by the user if output_format is str else returns the index of the element. """
 
     TERMINAL_HEIGHT = os.get_terminal_size().lines
     TERMINAL_WIDTH = os.get_terminal_size().columns
@@ -59,8 +59,8 @@ def create_menu(title: str | list | tuple, options: list | tuple, cursor_color: 
     sys.stdout.write("\033[?25l") # Hides cursor
 
     if(type(title) == str):
-            print('\n'*(VERTICAL_SPACING - 3))
-            print(" " + title.center(TERMINAL_WIDTH - 1) + '\n\n')
+        print('\n'*(VERTICAL_SPACING - 3))
+        print(" " + title.center(TERMINAL_WIDTH - 1) + '\n\n')
     else:
         print('\n'*(VERTICAL_SPACING - len(title) - 1))
         for line in title:
@@ -93,9 +93,9 @@ def create_menu(title: str | list | tuple, options: list | tuple, cursor_color: 
     sys.stdout.write("\033[?25h") # show cursor
     os.system("cls")
 
-    return options[cursor_height - VERTICAL_SPACING]
+    index_selected_option = cursor_height - VERTICAL_SPACING
 
-if(__name__ == "__main__"):
-    OPTIONS = ["Option 1", "Option 2", "Option 3", "Quit"]
-    choice = create_menu("Amazing Console Menu", OPTIONS, "red")
-    print(choice)
+    if(output_format == str):
+        return options[index_selected_option]
+    else:
+        return index_selected_option

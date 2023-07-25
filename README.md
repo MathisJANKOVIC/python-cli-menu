@@ -1,8 +1,8 @@
 # Console-GUI-Menu
 
-Console GUI Menu is Python module for Windows that allows you to easilly create a graphical user interface menu on console without the need for external libraries. You can navigate and select options by simply moving the cursor using arrow keys.
+Console GUI Menu is Python module for Windows that allows you to easilly create a graphical user interface menu on console without the need for external libraries. You can navigate and select options by moving the cursor using arrow keys.
 
-The module provides a function that allows you to create the menu with customizable title, options and cursor color. The function returns the selected option. You can pass a list or a tuple as the title parameter to print the title on multiple lines. Available colors are red, green, yellow, blue, magenta, cyan. You can also use a custom color by specifing ANSI color code using octal escape code starting with '\033'.
+The module provides a function that allows you to create the menu with customizable title, options, cursor color and default cursor position. The function returns the selected option. You can pass a list or a tuple as the title parameter to print the title on multiple lines. Available colors for cursor are red, green, yellow, blue, magenta, cyan. You can also use a custom color by specifing ANSI color code using octal escape code starting with '\033'. To modify the initial cursor position, which is set on the first option by default, you can give either the index of the option or directly the option itself.
 
 ![qsd](/screen_menu.png)
 
@@ -19,19 +19,19 @@ choice1 = create_menu(title="Amazing Console Menu", options=OPTIONS, cursor_colo
 # Creates a console menu with red cursor and title on multiple lines
 choice2 = create_menu(title=["Amazing Console", "Menu 2"], options=OPTIONS, cursor_color="red")
 
-# Creates a console menu with white cursor default set on the last option
+# Creates a console menu with white cursor default set on last option
 choice3 = create_menu(title="Amazing Console Menu", options=OPTIONS, cursor_color="\033[47m", initial_cursor_position=-1)
 
 print(choice1) # output : "Option 1"
 ```
-
 ## Requirements
-- Git (optionnal)
+
+- Windows
 - Python 3.10+
 
 ## Configuration
-To use the librairy you can simply download `console_menu.py` and move it in your project or move the file into your python librairy directory to use the module everywhere. Here are common locations for python librairies directory where 'X' stands for your python version :
 
-- Windows : ```C:\Program Files\PythonX\Lib``` or ```C:\Users\Username\AppData\Local\Programs\Python\PythonX\Lib```
-- MacOS : ```~/Library/Python/X/lib/pythonX``` or ```/Library/Frameworks/Python.framework/Versions/X/lib/pythonX```
-- Linux : ```/usr/lib/pythonX```
+To use the library, simply download console_menu.py and place it in your project directory. Alternatively, you can move the file to your Python library directory, allowing you to use the module in any project just by importing the module. Here are common locations for the library directory, where 'XX' stands for your Python version :
+
+- ```C:\Program Files\PythonXX\Lib```
+- ```C:\Users\Username\AppData\Local\Programs\Python\PythonXX\Lib```

@@ -9,18 +9,18 @@ The module provides a function that allows you to create the menu with customiza
 ## Quickstart
 
 ```python
-from console_menu import create_menu
+from console_menu import menu
 
 OPTIONS = ["Option 1", "Option 2", "Option 3", "Quit"]
 
 # Creates a console menu with blue cursor
-choice1 = create_menu(title="Amazing Console Menu", options=OPTIONS, cursor_color="blue")
+choice1 = menu(title="Amazing Console Menu", options=OPTIONS, cursor_color="blue")
 
 # Creates a console menu with red cursor and title on multiple lines
-choice2 = create_menu(title=["Amazing Console", "Menu 2"], options=OPTIONS, cursor_color="red")
+choice2 = menu(title=["Amazing Console", "Menu 2"], options=OPTIONS, cursor_color="red")
 
 # Creates a console menu with white cursor default set on last option
-choice3 = create_menu(title="Amazing Console Menu", options=OPTIONS, cursor_color="\033[47m", initial_cursor_position=-1)
+choice3 = menu(title="Amazing Console Menu", options=OPTIONS, cursor_color="\033[47m", initial_cursor_position=-1)
 
 print(choice1) # output : "Option 1"
 ```

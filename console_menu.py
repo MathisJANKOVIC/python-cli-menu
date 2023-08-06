@@ -18,7 +18,7 @@ ANSI_BG_COLORS = {
 }
 
 def menu(title: str | list[str] | tuple[str, ...], options: list[str] | tuple[str, ...], cursor_color: str, initial_cursor_position: str | int = 0, output_format: type = str) -> str | int:
-    """Creates a console GUI menu with arrow key navigation. Clears console once user have selected an option.
+    """Creates a graphical user interface menu in console, allowing users to navigate through the menu using arrow keys and select an option with enter key. Clears console once an option is selected.
 
     Args:
        - title : Main title of the menu. Pass a list or a tuple to print it on multiple lines.

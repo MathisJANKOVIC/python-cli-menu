@@ -1,12 +1,20 @@
 # Console-GUI-Menu
 
-Console GUI Menu is Python module for Windows that allows you to easilly create a graphical user interface menu on console without the need for external libraries. You can navigate and select options by moving the cursor using arrow keys.
-
-The module provides a function that allows you to create the menu with customizable title, options, cursor color and default cursor position. The function returns the selected option. You can pass a list or a tuple as the title parameter to print the title on multiple lines. Available colors for cursor are red, green, yellow, blue, magenta, cyan. You can also use a custom color by specifing ANSI color code using octal escape code starting with '\033'. To modify the initial cursor position, which is set on the first option by default, you can give either the index of the option or directly the option itself.
+Console GUI Menu is Python module for Windows that allows you to easilly create custom graphical user interface menu in the console. Customize the title, options, cursor color and initial cursor position. Use arrows keys to navigate through the menu and enter key to select an option.
 
 ![qsd](/screen_menu.png)
 
 ## Quickstart
+```python
+def menu(title: str | list | tuple, options: list | tuple, cursor_color: str, initial_cursor_position: str | int = 0, output_format: type = str) -> str | int:
+```
+> Creates a console GUI menu with arrow key navigation and clears console once an option is selected.
+
+- `title` is the main title of the menu, can be displayed on multiple lines if a list or a tuple is passed
+- `options` is the list of action or choices that can be selected with the cursor
+- `cursor_color` is the color of the cursor, available colors are `red`, `green`, `yellow`, `blue`, `magenta`, `cyan` and `white`, use custom color by specifying ANSI color code using escape code `\033`
+- `intial_cursor_position` is the index of element or  the element in `options` where the initial cursor position is set
+- `output_format` is the output type of the function, if `str` returns the selected element from the options list, if `int` returns the index of the selected element.
 
 ```python
 from console_menu import menu
@@ -14,7 +22,7 @@ from console_menu import menu
 OPTIONS = ["Option 1", "Option 2", "Option 3", "Quit"]
 
 # Creates a console menu with blue cursor
-choice1 = menu(title="Amazing Console Menu", options=OPTIONS, cursor_color="blue")
+choice1: str = menu("Amazing Console Menu", OPTIONS, cursor_color="blue")
 
 # Creates a console menu with red cursor and title on multiple lines
 choice2 = menu(title=["Amazing Console", "Menu 2"], options=OPTIONS, cursor_color="red")

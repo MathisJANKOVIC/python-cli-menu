@@ -5,9 +5,9 @@ Console GUI Menu is Python module for Windows that allows you to easilly create 
 ![qsd](/screen_menu.png)
 
 ## Quickstart
-```python
-def menu(title: str | list | tuple, options: list | tuple, cursor_color: str, initial_cursor_position: str | int = 0, output_format: type = str) -> str | int:
-```
+
+<label style="font-size: 15px;"><b>menu</b>(title: str | list | tuple, options: list | tuple, cursor_color: str, initial_cursor_position: str=0 | int, output_format:type=str):</label>
+
 > Creates a console GUI menu with arrow key navigation and clears console once an option is selected.
 
 - `title` is the main title of the menu, can be displayed on multiple lines if a list or a tuple is passed

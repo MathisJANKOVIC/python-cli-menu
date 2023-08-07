@@ -15,7 +15,6 @@ def menu(
     output_format: type = str
 ) -> (str | int)
 ```
-
 > Creates a console GUI menu with arrow key navigation and returns the selected option. Clears console once an option is selected.
 
 - `title` is the main title of the menu, can be displayed on multiple lines if a list or a tuple is passed
@@ -49,7 +48,7 @@ choice4: int = menu("Amazing Console Menu", OPTIONS, "yellow", ouput_format=int)
 
 ## Configuration
 
-To use the library, simply download console_menu.py and place it in your project directory. Alternatively, you can move the file to your Python library directory, allowing you to use the module in any project. Here are common locations for the library directory, where `XX` stands for your Python version :
+To use the library, simply download `console_menu.py` and place it in your project directory. Alternatively, you can move the file to your Python library directory, allowing you to use the module in any project. Here are common locations for the library directory, where `XX` stands for your Python version :
 
 - `C:\Program Files\PythonXX\Lib`
 - `C:\Users\Username\AppData\Local\Programs\Python\PythonXX\Lib`

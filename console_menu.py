@@ -17,19 +17,20 @@ ANSI_BG_COLORS = {
     "white": "\033[47m"
 }
 
-def menu(title: str | list[str] | tuple[str, ...], options: list[str] | tuple[str, ...], cursor_color: str, initial_cursor_position: str | int = 0, output_format: type = str) -> str | int:
+def menu(title: str | list[str] | tuple[str, ...], options: list[str] | tuple[str, ...], cursor_color: str, initial_cursor_position: str | int = 0, output_format: type = str) -> str | int :
     """Creates a graphical user interface menu in console, allowing users to navigate through the menu using arrow keys and select an option with enter key. Clears console once an option is selected.
 
     Args:
-       - title : Main title of the menu. Pass a list or a tuple to print it on multiple lines.
-       - options : Choices or actions that users can select.
-       - cursor_color : Color of the cursor. Available colors are red, green, yellow, blue, magenta, cyan and white.
-                        Use custom color by specifying ANSI color code using escape code \\033.
-       - initial_cursor_position (optional) : Index of element or element in options list where the initial cursor position is set (default position is the first element).
-       - output_format (optionnal) : Output type of the function. Default is str, which returns the selected element from the options list. Pass int to get the index of the selected element.
+        - `title`: main title of the menu, can be displayed on multiple lines if a list or a tuple is passed
+        - `options`: list of choices or actions that can be selected
+        - `cursor_color`: color of the cursor, available colors are `red`, `green`, `yellow`, `blue`, `magenta`, `cyan` and `white`,
+           use custom color by specifying ANSI color code using escape code `\\033`
+        - `initial_cursor_position` (optional): index of element or element in `options` where the initial cursor position is set (default position is first element)
+        - `output_format` (optionnal): output type of the function, default is `str`, which returns the selected element from `options`,
+           pass `int` to get the index of the selected element
 
     Returns:
-       - str | int : Returns the element from options list selected by the user if output_format is str else returns the index of the element. """
+       - `selected_option`: element from `options` selected by the user if output_format is `str` else returns the index of the element"""
 
     TERMINAL_HEIGHT = os.get_terminal_size().lines
     TERMINAL_WIDTH = os.get_terminal_size().columns
@@ -54,6 +55,9 @@ def menu(title: str | list[str] | tuple[str, ...], options: list[str] | tuple[st
             raise ValueError(f"'{initial_cursor_position}' is not an element of 'options'")
     else:
         raise TypeError(f"argument 'initial_cursor_position' expects int or str not {initial_cursor_position.__class__.__name__}")
+
+    if(output_format != str and output_format != int):
+        raise ValueError(f"argument 'output_format', excpects type str or int not {output_format.__name__}")
 
     os.system("cls")
     sys.stdout.write("\033[?25l") # Hides cursor

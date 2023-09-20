@@ -17,14 +17,13 @@ ANSI_BG_COLORS = {
     "white": "\033[47m"
 }
 
-def menu(title: str | list[str] | tuple[str, ...], options: list[str] | tuple[str, ...], cursor_color: str, initial_cursor_position: str | int = 0, output_format: type = str) -> str | int :
+def menu(title: str | list[str] | tuple[str, ...], options: list[str] | tuple[str, ...], cursor_color: str | tuple[int, int, int], initial_cursor_position: str | int = 0, output_format: type = str) -> str | int :
     """Creates a graphical user interface menu in console, allowing users to navigate through the menu using arrow keys and select an option with enter key. Clears console once an option is selected.
 
     Args:
         - `title`: main title of the menu, can be displayed on multiple lines if a list or a tuple is passed
         - `options`: list of choices or actions that can be selected
-        - `cursor_color`: color of the cursor, available colors are `red`, `green`, `yellow`, `blue`, `magenta`, `cyan` and `white`,
-           use custom color by specifying ANSI color code using escape code `\\033`
+        - `cursor_color`: color of the cursor, available colors are `red`, `green`, `yellow`, `blue`, `magenta`, `cyan` and `white`, use custom color by providing a tuple containing color RGB values
         - `initial_cursor_position` (optional): index of element or element in `options` where the initial cursor position is set (default position is first element)
         - `output_format` (optionnal): output type of the function, default is `str`, which returns the selected element from `options`,
            pass `int` to get the index of the selected element
@@ -37,18 +36,22 @@ def menu(title: str | list[str] | tuple[str, ...], options: list[str] | tuple[st
 
     VERTICAL_SPACING = (TERMINAL_HEIGHT - len(options)) // 2
 
-    if(not cursor_color.startswith('\033')):
-        if(ANSI_BG_COLORS.get(cursor_color) != None):
-            cursor_color = ANSI_BG_COLORS[cursor_color]
+    if(cursor_color in ANSI_BG_COLORS.keys()):
+        cursor_color = ANSI_BG_COLORS[cursor_color]
+    elif(type(cursor_color) is tuple and len(cursor_color) == 3 and all(type(value) is int for value in cursor_color)):
+        if(0 <= cursor_color[0] < 256 and 0 <= cursor_color[1] < 256 and 0 <= cursor_color[2] < 256):
+            cursor_color = f"\033[48;2;{cursor_color[0]};{cursor_color[1]};{cursor_color[2]}m"
         else:
-            raise ValueError(f"'{cursor_color}' is not a valid option for cursor color please check the function documentation.")
+            raise ValueError(f"{cursor_color} are not valid RGB values for cursor color (all values should be integers between 0 and 255)")
+    else:
+        raise ValueError(f"'{cursor_color}' is not a valid option for cursor color please check the function documentation.")
 
-    if(type(initial_cursor_position) == int):
+    if(type(initial_cursor_position) is int):
         if(-len(options) <= initial_cursor_position < len(options)):
             cursor_height = VERTICAL_SPACING + options.index(options[initial_cursor_position])
         else:
             raise ValueError(f"'{initial_cursor_position}' is not an index of 'options'")
-    elif(type(initial_cursor_position) == str):
+    elif(type(initial_cursor_position) is str):
         if(initial_cursor_position in options):
             cursor_height = VERTICAL_SPACING + options.index(initial_cursor_position)
         else:
@@ -62,7 +65,7 @@ def menu(title: str | list[str] | tuple[str, ...], options: list[str] | tuple[st
     os.system("cls")
     sys.stdout.write("\033[?25l") # Hides cursor
 
-    if(type(title) == str):
+    if(type(title) is str):
         print('\n'*(VERTICAL_SPACING - 3))
         print(" " + title.center(TERMINAL_WIDTH - 1) + '\n\n')
     else:
@@ -99,7 +102,7 @@ def menu(title: str | list[str] | tuple[str, ...], options: list[str] | tuple[st
 
     index_selected_option = cursor_height - VERTICAL_SPACING
 
-    if(output_format == str):
+    if(output_format is str):
         return options[index_selected_option]
     else:
         return index_selected_option

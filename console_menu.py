@@ -17,7 +17,7 @@ ANSI_BG_COLORS = {
     "white": "\033[47m"
 }
 
-def menu(title: str | list[str] | tuple[str, ...], options: list[str] | tuple[str, ...], cursor_color: str | tuple[int, int, int], initial_cursor_position: str | int = 0, output_format: type = str) -> str | int :
+def menu(title: str | list[str] | list[str], options: list[str] | tuple[str, ...], cursor_color: str | tuple[int, int, int], initial_cursor_position: str | int = 0, output_format: type = str) -> str | int :
     """Creates a graphical user interface menu in console, allowing users to navigate through the menu using arrow keys and select an option with enter key. Clears console once an option is selected.
 
     Args:
@@ -36,30 +36,40 @@ def menu(title: str | list[str] | tuple[str, ...], options: list[str] | tuple[st
 
     VERTICAL_SPACING = (TERMINAL_HEIGHT - len(options)) // 2
 
+    if(type(title) is not str and type(title) is not list and type(title) is not tuple):
+        raise TypeError(f"argument 'title' expects str, list or tuple not {title.__class__.__name__}")
+    elif(isinstance(title, (list, tuple)) and not all(type(line) is str for line in title)):
+        raise TypeError("all elements of argument 'title' must be str")
+
+    if(type(options) is not list and type(options) is not tuple):
+        raise TypeError(f"argument 'options' expects list or tuple not {options.__class__.__name__}")
+    elif(not all(type(element) is str for element in options)):
+        raise TypeError("all elements of argument 'options' must be str")
+
     if(cursor_color in ANSI_BG_COLORS.keys()):
         cursor_color = ANSI_BG_COLORS[cursor_color]
     elif(type(cursor_color) is tuple and len(cursor_color) == 3 and all(type(value) is int for value in cursor_color)):
         if(0 <= cursor_color[0] < 256 and 0 <= cursor_color[1] < 256 and 0 <= cursor_color[2] < 256):
             cursor_color = f"\033[48;2;{cursor_color[0]};{cursor_color[1]};{cursor_color[2]}m"
         else:
-            raise ValueError(f"{cursor_color} are not valid RGB values for cursor color (all values should be integers between 0 and 255)")
+            raise ValueError(f"{cursor_color} are not valid RGB values for argument 'cursor_color' (all values should be integers between 0 and 255)")
     else:
-        raise ValueError(f"'{cursor_color}' is not a valid option for cursor color please check the function documentation.")
+        raise ValueError(f"'{cursor_color}' is not a valid option for argument 'cursor_color' please check the function documentation.")
 
     if(type(initial_cursor_position) is int):
         if(-len(options) <= initial_cursor_position < len(options)):
             cursor_height = VERTICAL_SPACING + options.index(options[initial_cursor_position])
         else:
-            raise ValueError(f"'{initial_cursor_position}' is not an index of 'options'")
+            raise ValueError(f"'{initial_cursor_position}' is not an index of argument 'options'")
     elif(type(initial_cursor_position) is str):
         if(initial_cursor_position in options):
             cursor_height = VERTICAL_SPACING + options.index(initial_cursor_position)
         else:
-            raise ValueError(f"'{initial_cursor_position}' is not an element of 'options'")
+            raise ValueError(f"'{initial_cursor_position}' is not an element of argument 'options'")
     else:
         raise TypeError(f"argument 'initial_cursor_position' expects int or str not {initial_cursor_position.__class__.__name__}")
 
-    if(output_format != str and output_format != int):
+    if(output_format is not str and output_format is not int):
         raise ValueError(f"argument 'output_format', excpects type str or int not {output_format.__name__}")
 
     os.system("cls")

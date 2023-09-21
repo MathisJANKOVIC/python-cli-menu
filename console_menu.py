@@ -31,20 +31,24 @@ def menu(title: str | list[str] | list[str], options: list[str] | tuple[str, ...
     Returns:
        - `selected_option`: element from `options` selected by the user if output_format is `str` else returns the index of the element"""
 
-    TERMINAL_HEIGHT = os.get_terminal_size().lines
-    TERMINAL_WIDTH = os.get_terminal_size().columns
-
-    VERTICAL_SPACING = (TERMINAL_HEIGHT - len(options)) // 2
-
     if(type(title) is not str and type(title) is not list and type(title) is not tuple):
         raise TypeError(f"argument 'title' expects str, list or tuple not {title.__class__.__name__}")
     elif(isinstance(title, (list, tuple)) and not all(type(line) is str for line in title)):
         raise TypeError("all elements of argument 'title' must be str")
+    elif(isinstance(title, (list, tuple)) and len(title) < 2):
+        raise ValueError("argument 'title' if is a list or a tuple cannot have less than 2 elements")
 
     if(type(options) is not list and type(options) is not tuple):
         raise TypeError(f"argument 'options' expects list or tuple not {options.__class__.__name__}")
     elif(not all(type(element) is str for element in options)):
         raise TypeError("all elements of argument 'options' must be str")
+    elif(len(options) < 2):
+        raise ValueError("argument 'options' cannot have less than 2 elements")
+
+    TERMINAL_HEIGHT = os.get_terminal_size().lines
+    TERMINAL_WIDTH = os.get_terminal_size().columns
+
+    VERTICAL_SPACING = (TERMINAL_HEIGHT - len(options)) // 2
 
     if(cursor_color in ANSI_BG_COLORS.keys()):
         cursor_color = ANSI_BG_COLORS[cursor_color]

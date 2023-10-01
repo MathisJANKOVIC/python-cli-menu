@@ -1,29 +1,20 @@
 from setuptools import setup, find_packages
-import codecs
-import os
 
-VERSION = '0.1'
-DESCRIPTION = 'Streaming video data via networks'
-LONG_DESCRIPTION = 'A package that allows to build simple streams of video, audio and camera data.'
-
-# Setting up
 setup(
-    name="vidstream",
-    version=VERSION,
+    name="pyconsolemenu",
+    version='0.1',
     author="Rasting (Mathis Jankovic)",
-    author_email="<mathis.jankovic@gmail.com>",
-    description=DESCRIPTION,
-    long_description_content_type="text/markdown",
-    long_description="long_description",
+    author_email="mathis.jankovic@gmail.com",
+    description="A module for console GUI menu creation and customization",
+    long_description="""py-console-menu is a module for Windows that allows you to easilly create custom graphical user interface menu in the console,
+    customize the title, options, cursor color, title/options colors and much more.""",
     packages=find_packages(),
-    install_requires=['opencv-python', 'pyautogui', 'pyaudio'],
-    keywords=['python', 'video', 'stream', 'video stream', 'camera stream', 'sockets'],
+    keywords=['python', 'menu', 'console', 'gui'],
+    url="https://github.com/MathisJANKOVIC/Py-Console-Menu",
     classifiers=[
-        "Development Status :: 1 - Planning",
-        "Intended Audience :: Developers",
-        "Programming Language :: Python :: 3",
-        "Operating System :: Unix",
-        "Operating System :: MacOS :: MacOS X",
-        "Operating System :: Microsoft :: Windows",
+        "License :: OSI Approved :: MIT License",
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.10',
+        "Operating System :: Microsoft :: Windows"
     ]
 )

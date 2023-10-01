@@ -7,17 +7,29 @@ class Keys:
     DOWN = 'P' # Arrow down
     SELECT = '\r' # Enter
 
-ANSI_BG_COLORS = {
+COLORS = {
+    "red": "\033[31m",
+    "green": "\033[32m",
+    "yellow": "\033[33m",
+    "blue": "\033[34m",
+    "magenta": "\033[35m",
+    "cyan": "\033[36m",
+    "white": "\033[37m",
+    "default": "\033[0m"
+}
+
+BG_COLORS = {
     "red": "\033[41m",
     "green": "\033[42m",
     "yellow": "\033[43m",
     "blue": "\033[44m",
     "magenta": "\033[45m",
     "cyan": "\033[46m",
-    "white": "\033[47m"
+    "white": "\033[47m",
+    "default": "\033[0m"
 }
 
-def menu(title: str | list[str] | list[str], options: list[str] | tuple[str, ...], cursor_color: str | tuple[int, int, int], initial_cursor_position: str | int = 0, output_format: type = str) -> str | int :
+def menu(title: str | list[str] | list[str], options: list[str] | tuple[str, ...], cursor_color: str | tuple[int, int, int], options_color: str | tuple[int, int, int] | list[str | tuple[int, int, int]] | tuple[str | tuple[int, int, int], ...] = "default", initial_cursor_position: str | int = 0, output_format: type = str) -> str | int :
     """Creates a graphical user interface menu in console, allowing users to navigate through the menu using arrow keys and select an option with enter key. Clears console once an option is selected.
 
     Args:
@@ -31,7 +43,7 @@ def menu(title: str | list[str] | list[str], options: list[str] | tuple[str, ...
     Returns:
        - `selected_option`: element from `options` selected by the user if output_format is `str` else returns the index of the element"""
 
-    if(type(title) is not str and type(title) is not list and type(title) is not tuple):
+    if(not isinstance(title, (str, tuple, list))):
         raise TypeError(f"argument 'title' expects str, list or tuple not {title.__class__.__name__}")
     elif(isinstance(title, (list, tuple)) and not all(type(line) is str for line in title)):
         raise TypeError("all elements of argument 'title' must be str")
@@ -50,15 +62,27 @@ def menu(title: str | list[str] | list[str], options: list[str] | tuple[str, ...
 
     VERTICAL_SPACING = (TERMINAL_HEIGHT - len(options)) // 2
 
-    if(cursor_color in ANSI_BG_COLORS.keys()):
-        cursor_color = ANSI_BG_COLORS[cursor_color]
-    elif(type(cursor_color) is tuple and len(cursor_color) == 3 and all(type(value) is int for value in cursor_color)):
-        if(0 <= cursor_color[0] < 256 and 0 <= cursor_color[1] < 256 and 0 <= cursor_color[2] < 256):
+    if(cursor_color in BG_COLORS.keys()):
+        cursor_color = BG_COLORS[cursor_color]
+    elif(type(cursor_color) is tuple):
+        if(all(type(value) is int for value in cursor_color) and len(options_color) == 3 and 0 <= cursor_color[0] < 256 and 0 <= cursor_color[1] < 256 and 0 <= cursor_color[2] < 256):
             cursor_color = f"\033[48;2;{cursor_color[0]};{cursor_color[1]};{cursor_color[2]}m"
         else:
-            raise ValueError(f"{cursor_color} are not valid RGB values for argument 'cursor_color' (all values should be integers between 0 and 255)")
+            raise ValueError(f"{cursor_color} are not valid RGB values for argument 'cursor_color' (values should be 3 integers between 0 and 255)")
     else:
         raise ValueError(f"'{cursor_color}' is not a valid option for argument 'cursor_color' please check the function documentation.")
+
+    if(type(options_color) is str and options_color in BG_COLORS.keys()):
+        options_color = BG_COLORS[options_color]
+    elif(type(options_color) is tuple and all(not isinstance(value, (str, tuple)) for value in options_color)):
+        if(all(type(value) is int for value in options_color) and len(options_color) == 3 and 0 <= options_color[0] < 256 and 0 <= options_color[1] < 256 and 0 <= options_color[2] < 256):
+            options_color = f"\033[48;2;{options_color[0]};{options_color[1]};{options_color[2]}m"
+        else:
+            raise ValueError(f"{options_color} are not valid RGB values for argument 'options_color' (values should be 3 integers between 0 and 255)")
+    elif(isinstance(options_color, (list, tuple)) and all(((type(color) is str and color in BG_COLORS.keys()) or (type(color) is tuple and len(color) == 3 and all(type(rgb_value) is int and 0 <= rgb_value < 256 and 0 <= rgb_value < 256 and 0 <= rgb_value < 256 for rgb_value in color))) for color in options_color)):
+        input("ok")
+    else:
+        input("non")
 
     if(type(initial_cursor_position) is int):
         if(-len(options) <= initial_cursor_position < len(options)):
@@ -120,3 +144,5 @@ def menu(title: str | list[str] | list[str], options: list[str] | tuple[str, ...
         return options[index_selected_option]
     else:
         return index_selected_option
+
+menu("Hello World", ["option 1", "option 2", "option 3"], "blue", options_color=((190, 122, 75), (190, 122, 75), "green"))

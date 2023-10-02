@@ -1,6 +1,6 @@
 # py-console-menu
 
-py-console-menu is Python module for Windows that allows you to easilly create custom a pretty graphical user interface menu in the console. Customize the title, options, cursor color, title and options text color and much more. Use arrows keys to navigate through the menu and enter key to select an option.
+py-console-menu is a Python module for Windows that allows you to easilly create custom a pretty graphical user interface menu in the console. Customize the title, options, cursor color, title and options text color and much more. Use arrows keys to navigate through the menu and enter key to select an option.
 
 ![menu screen](/screen_menu.png)
 

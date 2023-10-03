@@ -9,22 +9,22 @@ class Keys:
 
 DEFAULT_COLORS = ("default", "red", "green", "yellow", "blue", "magenta", "cyan", "white")
 
-def ansi_escape_code(color: str | tuple, rgb_color: bool = False, bg_color: bool = False):
-    if(rgb_color):
-        if(bg_color):
+def ansi_escape_code(color: str | tuple, rgb: bool = False, bg: bool = False):
+    if(rgb):
+        if(bg):
             return f"\033[48;2;{color[0]};{color[1]};{color[2]}m"
         else:
             return f"\033[38;2;{color[0]};{color[1]};{color[2]}m"
     else:
         if(color.startswith("light")):
             index = DEFAULT_COLORS.index(color.removeprefix("light_"))
-            if(bg_color):
+            if(bg):
                 return f"\033[10{index}m"
             else:
                 return f"\033[9{index}m"
         else:
             index = DEFAULT_COLORS.index(color)
-            if(bg_color):
+            if(bg):
                 return f"\033[4{index}m"
             else:
                 return f"\033[3{index}m"
@@ -38,7 +38,7 @@ def menu(
     output_format: type = str
 ) -> str | int:
 
-    """Creates a graphical user interface menu in console, allowing users to navigate through the menu using arrow keys
+    """Creates a pretty graphical user interface menu in console, allowing users to navigate through the menu using arrow keys
     and select an option with enter key. Clears console once an option is selected.
 
     Args:
@@ -59,53 +59,55 @@ def menu(
 
     if(type(title) not in (str, list, tuple)):
         raise TypeError(f"argument 'title' expects str, list or tuple not {title.__class__.__name__}")
-    elif(type(title) in (list, tuple) and not all(type(line) is str for line in title)):
+    elif(len(title) == 0):
+        raise ValueError("argument 'title' cannot be empty")
+    elif(type(title) in (list, tuple) and any(type(line) is not str for line in title)):
         raise TypeError("all elements of argument 'title' must be str")
-    elif(type(title) in (list, tuple) and len(title) < 1):
-        raise ValueError("argument 'title' cannot have less than 1 element")
 
     if(type(options) not in (list, tuple)):
         raise TypeError(f"argument 'options' expects list or tuple not {options.__class__.__name__}")
-    elif(not all(type(element) is str for element in options)):
+    elif(len(options) == 0):
+        raise ValueError("argument 'options' cannot be empty")
+    elif(any(type(element) is not str for element in options)):
         raise TypeError("all elements of argument 'options' must be str")
-    elif(len(options) < 2):
-        raise ValueError("argument 'options' cannot have less than 2 elements")
 
     TERMINAL_HEIGHT = os.get_terminal_size().lines
     TERMINAL_WIDTH = os.get_terminal_size().columns
 
     VERTICAL_SPACING = (TERMINAL_HEIGHT - len(options)) // 2
 
-    if(type(cursor_color) is str and cursor_color.removeprefix("light_") in DEFAULT_COLORS):
-        cursor_color = ansi_escape_code(cursor_color, bg_color=True)
+    if(type(cursor_color) not in (str, tuple)):
+        raise TypeError(f"argument 'cursor_color' expects str or tuple not {cursor_color.__class__.__name__}")
+    elif(type(cursor_color) is str and cursor_color.removeprefix("light_") in DEFAULT_COLORS):
+        cursor_color = ansi_escape_code(cursor_color, bg=True)
     elif(type(cursor_color) is tuple):
         if(len(cursor_color) == 3 and all(type(value) is int and 0 <= value < 256 for value in cursor_color)):
-            cursor_color = ansi_escape_code(cursor_color, rgb_color=True, bg_color=True)
+            cursor_color = ansi_escape_code(cursor_color, rgb=True, bg=True)
         else:
             raise ValueError(f"{cursor_color} are not valid RGB values for argument 'cursor_color' (values should be 3 integers between 0 and 255)")
     else:
-        raise ValueError(f"'{cursor_color}' is not a valid option for argument 'cursor_color' please check the function documentation.")
+        raise ValueError(f"'{cursor_color}' is not a valid color for argument 'cursor_color' please check the function documentation.")
 
-    if(not isinstance(options_color, (str, tuple, list))):
+    if(type(options_color) not in (str, tuple, list)):
         raise TypeError(f"argument 'options_color' expects str, list or tuple not {options_color.__class__.__name__}")
-    elif(type(options_color) is str and (options_color.removeprefix("light_") in DEFAULT_COLORS)):
+    elif(type(options_color) is str and options_color.removeprefix("light_") in DEFAULT_COLORS):
         options_color = ansi_escape_code(options_color)
         has_options_single_color = True
     elif(options_color == ""):
         has_options_single_color = True
     elif(type(options_color) is tuple and all(not isinstance(value, (str, tuple)) for value in options_color)):
         if(all(type(value) is int for value in options_color) and len(options_color) == 3 and 0 <= options_color[0] < 256 and 0 <= options_color[1] < 256 and 0 <= options_color[2] < 256):
-            options_color = ansi_escape_code(options_color, rgb_color=True)
+            options_color = ansi_escape_code(options_color, rgb=True)
             has_options_single_color = True
         else:
             raise ValueError(f"{options_color} are not valid RGB values for argument 'options_color' (values should be 3 integers between 0 and 255)")
-    elif(isinstance(options_color, (list, tuple)) and all(((type(color) is str and color.removeprefix(light_) in DEFAULT_COLORS) or (type(color) is tuple and len(color) == 3 and all(type(rgb_value) is int and 0 <= rgb_value < 256 and 0 <= rgb_value < 256 and 0 <= rgb_value < 256 for rgb_value in color))) for color in options_color)):
+    elif(isinstance(options_color, (list, tuple)) and all(((type(color) is str and color.removeprefix("light_") in DEFAULT_COLORS) or (type(color) is tuple and len(color) == 3 and all(type(rgb_value) is int and 0 <= rgb_value < 256 and 0 <= rgb_value < 256 and 0 <= rgb_value < 256 for rgb_value in color))) for color in options_color)):
         has_options_single_color = False
         for i, value in enumerate(options_color):
             if(type(value) is str):
                 options_color[i] = ansi_escape_code(value)
             else:
-                options_color[i] = ansi_escape_code(value, rgb_color=True)
+                options_color[i] = ansi_escape_code(value, rgb=True)
     elif(options_color != ""):
         raise ValueError(f"'{options_color}' is not a valid option for argument 'options_color' please check the function documentation.")
 
@@ -178,4 +180,4 @@ def menu(
     else:
         return index_selected_option
 
-menu("Hello There", ["option 1", "option 2", "option 3"], (122,32,222))
+menu("Hello There", [], (122,32,222))

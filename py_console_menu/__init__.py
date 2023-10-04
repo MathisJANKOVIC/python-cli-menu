@@ -35,7 +35,6 @@ def menu(
     cursor_color: str | tuple[int, int, int],
     options_color: str | tuple[int, int, int] | list[str | tuple[int, int, int]] | tuple[str | tuple[int, int, int], ...] = "",
     initial_cursor_position: str | int = 0,
-    output_format: type = str
 ) -> str | int:
 
     """Creates a pretty graphical user interface menu in console, allowing users to navigate through the menu using arrow keys
@@ -47,7 +46,8 @@ def menu(
         - cursor_color: color of the cursor, available colors are `red`, `green`, `yellow`, `blue`, `magenta`, `cyan` and `white`,
         use custom color by providing a tuple containing color RGB values
         - options_color: color of options text, available colors are the same as `cursor_color`,
-        customize the color of every options separately by providing a list of colors, each color will be associated with the index of the corresponding option
+        customize the color of every options separately by providing a list of colors,
+        each color will be associated with the index of the corresponding option
         - initial_cursor_position (optional): index of element or element in `options` where the initial cursor position is set
         (default position is first element)
         - output_format (optionnal): output type of the function, default is `str`, which returns the selected element from `options`,
@@ -124,9 +124,6 @@ def menu(
     else:
         raise TypeError(f"argument 'initial_cursor_position' expects int or str not {initial_cursor_position.__class__.__name__}")
 
-    if(output_format is not str and output_format is not int):
-        raise ValueError(f"argument 'output_format', excpects type str or int not {output_format.__name__}")
-
     os.system("cls")
     sys.stdout.write("\033[?25l") # Hides cursor
 
@@ -173,11 +170,4 @@ def menu(
     sys.stdout.write("\033[?25h") # show cursor
     os.system("cls")
 
-    index_selected_option = cursor_height - VERTICAL_SPACING
-
-    if(output_format is str):
-        return options[index_selected_option]
-    else:
-        return index_selected_option
-
-menu("Hello There", [], (122,32,222))
+    return options[cursor_height - VERTICAL_SPACING]

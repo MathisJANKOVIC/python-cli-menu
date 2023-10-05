@@ -35,7 +35,7 @@ def menu(
     cursor_color: str | tuple[int, int, int],
     options_color: str | tuple[int, int, int] | list[str | tuple[int, int, int]] | tuple[str | tuple[int, int, int], ...] = "",
     initial_cursor_position: str | int = 0,
-) -> str | int:
+) -> str:
 
     """Creates a pretty graphical user interface menu in console, allowing users to navigate through the menu using arrow keys
     and select an option with enter key. Clears console once an option is selected.
@@ -50,17 +50,13 @@ def menu(
         each color will be associated with the index of the corresponding option
         - initial_cursor_position (optional): index of element or element in `options` where the initial cursor position is set
         (default position is first element)
-        - output_format (optionnal): output type of the function, default is `str`, which returns the selected element from `options`,
-        pass `int` to get the index of the selected element
 
     Returns:
-       - selected_option: element from `options` selected by the user if output_format is `str` else returns the index of the element
+       - selected_option: str element from `options` selected by the user
     """
 
     if(type(title) not in (str, list, tuple)):
         raise TypeError(f"argument 'title' expects str, list or tuple not {title.__class__.__name__}")
-    elif(len(title) == 0):
-        raise ValueError("argument 'title' cannot be empty")
     elif(type(title) in (list, tuple) and any(type(line) is not str for line in title)):
         raise TypeError("all elements of argument 'title' must be str")
 
@@ -79,36 +75,38 @@ def menu(
     if(type(cursor_color) not in (str, tuple)):
         raise TypeError(f"argument 'cursor_color' expects str or tuple not {cursor_color.__class__.__name__}")
     elif(type(cursor_color) is str and cursor_color.removeprefix("light_") in DEFAULT_COLORS):
-        cursor_color = ansi_escape_code(cursor_color, bg=True)
+        ansi_cursor_color = ansi_escape_code(cursor_color, bg=True)
     elif(type(cursor_color) is tuple):
         if(len(cursor_color) == 3 and all(type(value) is int and 0 <= value < 256 for value in cursor_color)):
-            cursor_color = ansi_escape_code(cursor_color, rgb=True, bg=True)
+            ansi_cursor_color = ansi_escape_code(cursor_color, rgb=True, bg=True)
         else:
             raise ValueError(f"{cursor_color} are not valid RGB values for argument 'cursor_color' (values should be 3 integers between 0 and 255)")
     else:
-        raise ValueError(f"'{cursor_color}' is not a valid color for argument 'cursor_color' please check the function documentation.")
+        raise ValueError(f"'{cursor_color}' is not a valid color for argument 'cursor_color', please check the function documentation.")
 
     if(type(options_color) not in (str, tuple, list)):
         raise TypeError(f"argument 'options_color' expects str, list or tuple not {options_color.__class__.__name__}")
     elif(type(options_color) is str and options_color.removeprefix("light_") in DEFAULT_COLORS):
-        options_color = ansi_escape_code(options_color)
-        has_options_single_color = True
+        multiple_colors_for_options = False
+        ansi_options_color = ansi_escape_code(options_color)
     elif(options_color == ""):
-        has_options_single_color = True
-    elif(type(options_color) is tuple and all(not isinstance(value, (str, tuple)) for value in options_color)):
-        if(all(type(value) is int for value in options_color) and len(options_color) == 3 and 0 <= options_color[0] < 256 and 0 <= options_color[1] < 256 and 0 <= options_color[2] < 256):
-            options_color = ansi_escape_code(options_color, rgb=True)
-            has_options_single_color = True
+        ansi_options_color = options_color
+        multiple_colors_for_options = False
+    elif(type(options_color) is tuple and all(type(value) is int for value in options_color)):
+        if(len(options_color) == 3 and all(type(value) is int and 0 <= value < 256 for value in options_color) ):
+            multiple_colors_for_options = False
+            ansi_options_color = ansi_escape_code(options_color, rgb=True)
         else:
             raise ValueError(f"{options_color} are not valid RGB values for argument 'options_color' (values should be 3 integers between 0 and 255)")
-    elif(isinstance(options_color, (list, tuple)) and all(((type(color) is str and color.removeprefix("light_") in DEFAULT_COLORS) or (type(color) is tuple and len(color) == 3 and all(type(rgb_value) is int and 0 <= rgb_value < 256 and 0 <= rgb_value < 256 and 0 <= rgb_value < 256 for rgb_value in color))) for color in options_color)):
-        has_options_single_color = False
-        for i, value in enumerate(options_color):
-            if(type(value) is str):
-                options_color[i] = ansi_escape_code(value)
+    elif(type(options_color) in (list, tuple) and all(((type(color) is str and color.removeprefix("light_") in DEFAULT_COLORS) or (type(color) is tuple and len(color) == 3 and all(type(rgb_value) is int and 0 <= rgb_value < 256 for rgb_value in color))) for color in options_color)):
+        multiple_colors_for_options = True
+        ansi_options_color = []
+        for i, color in enumerate(options_color):
+            if(type(color) is str):
+                ansi_options_color[i] = ansi_escape_code(color)
             else:
-                options_color[i] = ansi_escape_code(value, rgb=True)
-    elif(options_color != ""):
+                ansi_options_color[i] = ansi_escape_code(color, rgb=True)
+    else:
         raise ValueError(f"'{options_color}' is not a valid option for argument 'options_color' please check the function documentation.")
 
     if(type(initial_cursor_position) is int):
@@ -138,19 +136,18 @@ def menu(
 
     key = None
     while(key != Keys.SELECT):
-
-        if(has_options_single_color):
+        if(multiple_colors_for_options):
             for line, option in enumerate(options):
                 if(line + VERTICAL_SPACING == cursor_height):
-                    print(cursor_color + option.center(TERMINAL_WIDTH - 1) + '\033[0m')
+                    print(ansi_options_color[line] + cursor_color + option.center(TERMINAL_WIDTH - 1) + '\033[0m')
                 else:
-                    print(options_color + option.center(TERMINAL_WIDTH - 1))
+                    print(ansi_options_color[line] + option.center(TERMINAL_WIDTH - 1))
         else:
             for line, option in enumerate(options):
                 if(line + VERTICAL_SPACING == cursor_height):
-                    print(options_color[line] + cursor_color + option.center(TERMINAL_WIDTH - 1) + '\033[0m')
+                    print(ansi_cursor_color + option.center(TERMINAL_WIDTH - 1) + '\033[0m')
                 else:
-                    print(options_color[line] + option.center(TERMINAL_WIDTH - 1))
+                    print(ansi_options_color + option.center(TERMINAL_WIDTH - 1))
 
         key = msvcrt.getwch()
 

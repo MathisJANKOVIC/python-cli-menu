@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="pyconsolemenu",
-    version='0.1',
+    version='1.0',
     author="Rasting (Mathis Jankovic)",
     author_email="mathis.jankovic@gmail.com",
     description="A module for console GUI menu creation and customization",

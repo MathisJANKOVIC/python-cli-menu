@@ -1,33 +1,10 @@
+import platform
 import msvcrt
 import sys
 import os
 
-class Keys:
-    UP = 'H' # Arrow up
-    DOWN = 'P' # Arrow down
-    SELECT = '\r' # Enter
-
-DEFAULT_COLORS = ("default", "red", "green", "yellow", "blue", "magenta", "cyan", "white")
-
-def ansi_escape_code(color: str | tuple, rgb: bool = False, bg: bool = False):
-    if(rgb):
-        if(bg):
-            return f"\033[48;2;{color[0]};{color[1]};{color[2]}m"
-        else:
-            return f"\033[38;2;{color[0]};{color[1]};{color[2]}m"
-    else:
-        if(color.startswith("light")):
-            index = DEFAULT_COLORS.index(color.removeprefix("light_"))
-            if(bg):
-                return f"\033[10{index}m"
-            else:
-                return f"\033[9{index}m"
-        else:
-            index = DEFAULT_COLORS.index(color)
-            if(bg):
-                return f"\033[4{index}m"
-            else:
-                return f"\033[3{index}m"
+if(sys.platform != 'win32'):
+    raise RuntimeError(f"currently {platform.system()} is not supported")
 
 def menu(
     title: str | list[str] | tuple[str, ...],
@@ -54,6 +31,34 @@ def menu(
     Returns:
        - selected_option: str element from `options` selected by the user
     """
+    class Keys:
+            UP = 'H' # Arrow up
+            DOWN = 'P' # Arrow down
+            SELECT = '\r' # Enter
+
+    DEFAULT_COLORS = ("default", "red", "green", "yellow", "blue", "magenta", "cyan", "white")
+
+    def ansi_escape_code(color: str | tuple[int, int, int], rgb: bool = False, bg: bool = False):
+        if(color == ""):
+            return color
+        if(rgb):
+            if(bg):
+                return f"\033[48;2;{color[0]};{color[1]};{color[2]}m"
+            else:
+                return f"\033[38;2;{color[0]};{color[1]};{color[2]}m"
+        else:
+            if(color.startswith("light")):
+                index = DEFAULT_COLORS.index(color.removeprefix("light_"))
+                if(bg):
+                    return f"\033[10{index}m"
+                else:
+                    return f"\033[9{index}m"
+            else:
+                index = DEFAULT_COLORS.index(color)
+                if(bg):
+                    return f"\033[4{index}m"
+                else:
+                    return f"\033[3{index}m"
 
     if(type(title) not in (str, list, tuple)):
         raise TypeError(f"argument 'title' expects str, list or tuple not {title.__class__.__name__}")
@@ -84,30 +89,35 @@ def menu(
     else:
         raise ValueError(f"'{cursor_color}' is not a valid color for argument 'cursor_color', please check the function documentation.")
 
+
     if(type(options_color) not in (str, tuple, list)):
-        raise TypeError(f"argument 'options_color' expects str, list or tuple not {options_color.__class__.__name__}")
+        raise TypeError(f"menu() argument 'options_color' expects str, list or tuple not {options_color.__class__.__name__}")
+
     elif(type(options_color) is str and options_color.removeprefix("light_") in DEFAULT_COLORS):
         multiple_colors_for_options = False
         ansi_options_color = ansi_escape_code(options_color)
+
     elif(options_color == ""):
         ansi_options_color = options_color
         multiple_colors_for_options = False
+
     elif(type(options_color) is tuple and all(type(value) is int for value in options_color)):
+
         if(len(options_color) == 3 and all(type(value) is int and 0 <= value < 256 for value in options_color) ):
             multiple_colors_for_options = False
             ansi_options_color = ansi_escape_code(options_color, rgb=True)
         else:
             raise ValueError(f"{options_color} are not valid RGB values for argument 'options_color' (values should be 3 integers between 0 and 255)")
-    elif(type(options_color) in (list, tuple) and all(((type(color) is str and color.removeprefix("light_") in DEFAULT_COLORS) or (type(color) is tuple and len(color) == 3 and all(type(rgb_value) is int and 0 <= rgb_value < 256 for rgb_value in color))) for color in options_color)):
+    elif(type(options_color) in (list, tuple) and all(((type(color) is str and (color.removeprefix("light_") in DEFAULT_COLORS or color == "")) or (type(color) is tuple and len(color) == 3 and all(type(rgb_value) is int and 0 <= rgb_value < 256 for rgb_value in color))) for color in options_color)):
         multiple_colors_for_options = True
         ansi_options_color = []
         for i, color in enumerate(options_color):
             if(type(color) is str):
-                ansi_options_color[i] = ansi_escape_code(color)
+                ansi_options_color.append(ansi_escape_code(color))
             else:
-                ansi_options_color[i] = ansi_escape_code(color, rgb=True)
+                ansi_options_color.append(ansi_escape_code(color, rgb=True))
     else:
-        raise ValueError(f"'{options_color}' is not a valid option for argument 'options_color' please check the function documentation.")
+        raise ValueError(f"'{options_color}' is not a valid option for menu() argument 'options_color' please check the function documentation.")
 
     if(type(initial_cursor_position) is int):
         if(-len(options) <= initial_cursor_position < len(options)):
@@ -139,15 +149,15 @@ def menu(
         if(multiple_colors_for_options):
             for line, option in enumerate(options):
                 if(line + VERTICAL_SPACING == cursor_height):
-                    print(ansi_options_color[line] + cursor_color + option.center(TERMINAL_WIDTH - 1) + '\033[0m')
+                    print(ansi_cursor_color + ansi_options_color[line] + option.center(TERMINAL_WIDTH - 1) + '\033[0m')
                 else:
-                    print(ansi_options_color[line] + option.center(TERMINAL_WIDTH - 1))
+                    print(ansi_options_color[line] + option.center(TERMINAL_WIDTH - 1) + '\033[0m')
         else:
             for line, option in enumerate(options):
                 if(line + VERTICAL_SPACING == cursor_height):
-                    print(ansi_cursor_color + option.center(TERMINAL_WIDTH - 1) + '\033[0m')
+                    print(ansi_cursor_color + ansi_options_color + option.center(TERMINAL_WIDTH - 1) + '\033[0m')
                 else:
-                    print(ansi_options_color + option.center(TERMINAL_WIDTH - 1))
+                    print(ansi_options_color + option.center(TERMINAL_WIDTH - 1) + '\033[0m')
 
         key = msvcrt.getwch()
 

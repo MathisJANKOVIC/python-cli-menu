@@ -1,4 +1,5 @@
 import py_console_menu
 
-
-py_console_menu.menu("Hello There", ["option1", "option2", "option3"], (192, 168, 122), options_color=[(123, 33, 233), "blue", "green"])
+# py_console_menu.menu("Hello There", ["options1", "options2", "options3"], "blue", (122, 33, 33))
+py_console_menu.menu("Hello There", ["options1", "options2", "options3"], "blue", ((122, 33, 33), "", "blue"))
+# print('\033[32m\033[44mHello\033[0m')

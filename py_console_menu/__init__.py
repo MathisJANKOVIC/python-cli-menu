@@ -159,15 +159,15 @@ def titlescreen(
         if(multiple_colors_for_options):
             for line, option in enumerate(options):
                 if(line + VERTICAL_SPACING == cursor_height):
-                    print(ansi_cursor_color + ansi_options_color[line] + option.center(TERMINAL_WIDTH - 1) + '\033[0m')
+                    print(" " + ansi_cursor_color + ansi_options_color[line] + option.center(TERMINAL_WIDTH - 1) + '\033[0m')
                 else:
-                    print(ansi_options_color[line] + option.center(TERMINAL_WIDTH - 1) + '\033[0m')
+                    print(" " + ansi_options_color[line] + option.center(TERMINAL_WIDTH - 1) + '\033[0m')
         else:
             for line, option in enumerate(options):
                 if(line + VERTICAL_SPACING == cursor_height):
-                    print(ansi_cursor_color + ansi_options_color + option.center(TERMINAL_WIDTH - 1) + '\033[0m')
+                    print(" " + ansi_cursor_color + ansi_options_color + option.center(TERMINAL_WIDTH - 1) + '\033[0m')
                 else:
-                    print(ansi_options_color + option.center(TERMINAL_WIDTH - 1) + '\033[0m')
+                    print(" " + ansi_options_color + option.center(TERMINAL_WIDTH - 1) + '\033[0m')
 
         key = msvcrt.getwch()
 

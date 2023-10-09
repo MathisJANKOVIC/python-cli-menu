@@ -1,16 +1,17 @@
+from typing import Sequence
 import platform
 import msvcrt
 import sys
 import os
 
 if(sys.platform != 'win32'):
-    raise RuntimeError(f"currently {platform.system()} is not supported")
+    raise RuntimeError(f"{platform.system()} is not currently supported")
 
-def titlescreen(
-    title: str | list[str] | tuple[str, ...],
-    options: list[str] | tuple[str, ...],
+def menu(
+    title: str | Sequence[str],
+    options: Sequence[str],
     cursor_color: str | tuple[int, int, int],
-    options_color: str | tuple[int, int, int] | None | list[str | tuple[int, int, int] | None] | tuple[str | tuple[int, int, int] | None, ...] = None,
+    options_color: str | tuple[int, int, int] | Sequence[str | tuple[int, int, int] | None] | None = None,
     initial_cursor_position: str | int = 0,
 ) -> str:
 
@@ -58,9 +59,9 @@ def titlescreen(
                 else:
                     return f"\033[3{index}m"
 
-    if(type(title) not in (str, list, tuple)):
+    if(not isinstance(title, Sequence)):
         raise TypeError(f"menu() argument 'title' expects str, list or tuple not {title.__class__.__name__}")
-    elif(type(title) in (list, tuple) and any(type(line) is not str for line in title)):
+    elif(any(type(line) is not str for line in title)):
         raise TypeError("all elements of menu() argument 'title' must be str")
 
     if(type(options) not in (list, tuple)):
@@ -159,15 +160,15 @@ def titlescreen(
         if(multiple_colors_for_options):
             for line, option in enumerate(options):
                 if(line + VERTICAL_SPACING == cursor_height):
-                    print(" " + ansi_cursor_color + ansi_options_color[line] + option.center(TERMINAL_WIDTH - 1) + '\033[0m')
+                    print(" " + ansi_cursor_color + ansi_options_color[line] + option.center(TERMINAL_WIDTH - 1) + "\033[0m")
                 else:
-                    print(" " + ansi_options_color[line] + option.center(TERMINAL_WIDTH - 1) + '\033[0m')
+                    print(" " + ansi_options_color[line] + option.center(TERMINAL_WIDTH - 1) + "\033[0m")
         else:
             for line, option in enumerate(options):
                 if(line + VERTICAL_SPACING == cursor_height):
-                    print(" " + ansi_cursor_color + ansi_options_color + option.center(TERMINAL_WIDTH - 1) + '\033[0m')
+                    print(" " + ansi_cursor_color + ansi_options_color + option.center(TERMINAL_WIDTH - 1) + "\033[0m")
                 else:
-                    print(" " + ansi_options_color + option.center(TERMINAL_WIDTH - 1) + '\033[0m')
+                    print(" " + ansi_options_color + option.center(TERMINAL_WIDTH - 1) + "\033[0m")
 
         key = msvcrt.getwch()
 

@@ -33,13 +33,13 @@ def menu(
        - selected_option: str element from `options` selected by the user
     """
     class Keys:
-            UP = 'H' # Arrow up
-            DOWN = 'P' # Arrow down
-            SELECT = '\r' # Enter
+        UP = 'H'
+        DOWN = 'P'
+        SELECT = '\r'
 
     DEFAULT_COLORS = ("default", "red", "green", "yellow", "blue", "magenta", "cyan", "white")
 
-    def ansi_escape_code(color: str | tuple[int, int, int], rgb: bool = False, bg: bool = False):
+    def ansi(color: str | tuple[int, int, int], bg: bool, rgb: bool = False):
         if(rgb):
             if(bg):
                 return f"\033[48;2;{color[0]};{color[1]};{color[2]}m"
@@ -78,25 +78,32 @@ def menu(
 
     if(type(cursor_color) not in (str, tuple)):
         raise TypeError(f"menu() argument 'cursor_color' expects str or tuple, not {type(cursor_color).__name__}")
-    elif(type(cursor_color) is str and cursor_color.removeprefix("light_") in DEFAULT_COLORS):
-        ansi_cursor_color = ansi_escape_code(cursor_color, bg=True)
     elif(type(cursor_color) is tuple):
         if(len(cursor_color) == 3 and all(type(value) is int and 0 <= value < 256 for value in cursor_color)):
-            ansi_cursor_color = ansi_escape_code(cursor_color, rgb=True, bg=True)
+            ansi_cursor_color = ansi(cursor_color, rgb=True, bg=True)
         else:
             raise ValueError(f"invalid RGB values for menu() argument 'cursor_color'")
+    elif(type(cursor_color) is str and cursor_color.removeprefix("light_") in DEFAULT_COLORS):
+        ansi_cursor_color = ansi(cursor_color, bg=True)
     else:
         raise ValueError(f"invalid color for menu() argument 'cursor_color'")
 
+
     if(not isinstance(options_color, Sequence) and options_color is not None):
         raise TypeError(f"menu() argument 'options_color' expects str, list, tuple or None, not {type(options_color).__name__}")
+
+    elif(options_color is None):
+        multiple_colors_for_options = False
+        ansi_options_color = ""
+
     elif(type(options_color) is str and options_color.removeprefix("light_") in DEFAULT_COLORS):
         multiple_colors_for_options = False
-        ansi_options_color = ansi_escape_code(options_color)
+        ansi_options_color = ansi(options_color, bg=False)
+
     elif(type(options_color) is tuple and all(type(value) is int for value in options_color)):
         if(len(options_color) == 3 and all(type(value) is int and 0 <= value < 256 for value in options_color) ):
             multiple_colors_for_options = False
-            ansi_options_color = ansi_escape_code(options_color, rgb=True)
+            ansi_options_color = ansi(options_color, rgb=True, bg=False)
         else:
             raise ValueError(f"invalid RGB values for menu() argument 'options_color'")
 
@@ -113,9 +120,9 @@ def menu(
                     if(color is None):
                         ansi_options_color.append("")
                     elif(type(color) is str):
-                        ansi_options_color.append(ansi_escape_code(color))
+                        ansi_options_color.append(ansi(color, bg=False))
                     else:
-                        ansi_options_color.append(ansi_escape_code(color, rgb=True))
+                        ansi_options_color.append(ansi(color, rgb=True, bg=False))
 
                 while(len(ansi_options_color) < len(options)):
                     ansi_options_color.append("")
@@ -123,12 +130,9 @@ def menu(
                 raise ValueError("menu() argument 'options_color' cannot have more colors than options")
         else:
             raise ValueError(f"invalid sequence of color for menu() argument 'options_color'")
-
-    elif(options_color is None):
-        multiple_colors_for_options = False
-        ansi_options_color = ""
     else:
         raise ValueError(f"invalid color for menu() argument 'options_color'")
+
 
     if(type(initial_cursor_position) is int):
         if(-len(options) <= initial_cursor_position < len(options)):

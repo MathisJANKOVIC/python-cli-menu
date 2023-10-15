@@ -5,14 +5,14 @@ import sys
 import os
 
 if(sys.platform != 'win32'):
-    raise RuntimeError(f"{platform.system()} is not currently supported")
+    raise RuntimeError(f"{platform.system()} is currently not supported")
 
 def menu(
     title: str | Sequence[str],
-    options: Sequence[str],
+    options: list[str] | tuple[str, ...],
     cursor_color: str | tuple[int, int, int],
     options_color: str | tuple[int, int, int] | Sequence[str | tuple[int, int, int] | None] | None = None,
-    initial_cursor_position: str | int = 0,
+    initial_cursor_position: int | str = 0,
 ) -> str:
 
     """Creates a pretty graphical user interface menu in console, allowing users to navigate through the menu using arrow keys
@@ -60,12 +60,12 @@ def menu(
                     return f"\033[3{index}m"
 
     if(not isinstance(title, Sequence)):
-        raise TypeError(f"menu() argument 'title' expects str, list or tuple not {title.__class__.__name__}")
-    elif(any(type(line) is not str for line in title)):
+        raise TypeError(f"menu() argument 'title' expects str, list or tuple, not {type(title).__name__}")
+    elif(type(title) is not str and any(type(line) is not str for line in title)):
         raise TypeError("all elements of menu() argument 'title' must be str")
 
     if(type(options) not in (list, tuple)):
-        raise TypeError(f"menu() argument 'options' expects list or tuple not {options.__class__.__name__}")
+        raise TypeError(f"menu() argument 'options' expects list or tuple, not {type(options).__name__}")
     elif(len(options) == 0):
         raise ValueError("menu() argument 'options' cannot be empty")
     elif(any(type(element) is not str for element in options)):
@@ -77,19 +77,19 @@ def menu(
     VERTICAL_SPACING = (TERMINAL_HEIGHT - len(options)) // 2
 
     if(type(cursor_color) not in (str, tuple)):
-        raise TypeError(f"menu() argument 'cursor_color' expects str or tuple not {cursor_color.__class__.__name__}")
+        raise TypeError(f"menu() argument 'cursor_color' expects str or tuple, not {type(cursor_color).__name__}")
     elif(type(cursor_color) is str and cursor_color.removeprefix("light_") in DEFAULT_COLORS):
         ansi_cursor_color = ansi_escape_code(cursor_color, bg=True)
     elif(type(cursor_color) is tuple):
         if(len(cursor_color) == 3 and all(type(value) is int and 0 <= value < 256 for value in cursor_color)):
             ansi_cursor_color = ansi_escape_code(cursor_color, rgb=True, bg=True)
         else:
-            raise ValueError(f"{cursor_color} are not valid RGB values for menu() argument 'cursor_color' (values should be 3 integers between 0 and 255)")
+            raise ValueError(f"invalid RGB values for menu() argument 'cursor_color'")
     else:
-        raise ValueError(f"'{cursor_color}' is not a valid color for argument menu() 'cursor_color', please check the function documentation.")
+        raise ValueError(f"invalid color for menu() argument 'cursor_color'")
 
-    if(type(options_color) not in (str, tuple, list) and options_color is not None):
-        raise TypeError(f"menu() argument 'options_color' expects str, list, tuple or None not {options_color.__class__.__name__}")
+    if(not isinstance(options_color, Sequence) and options_color is not None):
+        raise TypeError(f"menu() argument 'options_color' expects str, list, tuple or None, not {type(options_color).__name__}")
     elif(type(options_color) is str and options_color.removeprefix("light_") in DEFAULT_COLORS):
         multiple_colors_for_options = False
         ansi_options_color = ansi_escape_code(options_color)
@@ -98,7 +98,7 @@ def menu(
             multiple_colors_for_options = False
             ansi_options_color = ansi_escape_code(options_color, rgb=True)
         else:
-            raise ValueError(f"{options_color} are not valid RGB values for menu() argument 'options_color' (values should be 3 integers between 0 and 255)")
+            raise ValueError(f"invalid RGB values for menu() argument 'options_color'")
 
     elif(type(options_color) in (list, tuple)):
         if(all(((type(color) is str and color.removeprefix("light_") in DEFAULT_COLORS)
@@ -122,13 +122,13 @@ def menu(
             else:
                 raise ValueError("menu() argument 'options_color' cannot have more colors than options")
         else:
-            raise ValueError(f"{options_color} is not a valid list of color for menu() argument 'options_color'")
+            raise ValueError(f"invalid sequence of color for menu() argument 'options_color'")
 
     elif(options_color is None):
         multiple_colors_for_options = False
         ansi_options_color = ""
     else:
-        raise ValueError(f"'{options_color}' is not a valid option for menu() argument 'options_color' please check the function documentation.")
+        raise ValueError(f"invalid color for menu() argument 'options_color'")
 
     if(type(initial_cursor_position) is int):
         if(-len(options) <= initial_cursor_position < len(options)):
@@ -141,7 +141,7 @@ def menu(
         else:
             raise ValueError(f"'{initial_cursor_position}' is not an element of menu() argument 'options'")
     else:
-        raise TypeError(f"menu() argument 'initial_cursor_position' expects int or str not {initial_cursor_position.__class__.__name__}")
+        raise TypeError(f"menu() argument 'initial_cursor_position' expects int or str, not {type(initial_cursor_position).__name__}")
 
     os.system("cls")
     sys.stdout.write("\033[?25l") # Hides cursor

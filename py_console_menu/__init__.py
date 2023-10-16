@@ -5,18 +5,20 @@ import sys
 import os
 
 if(sys.platform != 'win32'):
-    raise RuntimeError(f"{platform.system()} is currently not supported")
+    raise RuntimeError(
+        f"{platform.system()} is currently not supported"
+    )
 
 def menu(
     title: str | Sequence[str],
     options: list[str] | tuple[str, ...],
     cursor_color: str | tuple[int, int, int],
     options_color: str | tuple[int, int, int] | Sequence[str | tuple[int, int, int] | None] | None = None,
-    initial_cursor_position: int | str = 0,
+    initial_cursor_position: str | int = 0,
 ) -> str:
 
     """Creates a pretty menu in console. Use arrow keys to move the cursor and enter key to select an option.
-    Clears the console once an option is selected.
+    Clears console once an option is selected.
 
     Args:
         - title: main title of the menu, can be displayed on multiple lines if a list or a tuple is passed.
@@ -25,12 +27,12 @@ def menu(
         use custom color by providing a tuple containing color RGB values.
         - options_color (optional): color of options text, available colors are the same as `cursor_color`,
         customize the color of every options separately by providing a list of colors,
-        each color will be associated with the index of the corresponding option.
+        each color will be associated with the option of the corresponding index.
         - initial_cursor_position (optional): index of element or element in `options` where the initial cursor position is set
         (default position is first element).
 
     Returns:
-       - selected_option: str element from `options` selected by the user.
+       - selected_option: element from `options` selected by the user.
     """
     class Keys:
         UP = 'H'
@@ -86,6 +88,15 @@ def menu(
 
     VERTICAL_SPACING = (TERMINAL_HEIGHT - len(options)) // 2
 
+    if(type(title) is str and len(options) + 3 >= TERMINAL_HEIGHT):
+        raise RuntimeError(
+           "terminal height is too low to display all options, resize your terminal or reduce the number of options"
+        )
+    elif(len(options) + 3 >= TERMINAL_HEIGHT):
+        raise RuntimeError(
+            "terminal height is too low to display all options, resize your terminal or reduce the number of options"
+        )
+
     if(type(cursor_color) not in (str, tuple)):
         raise TypeError(
             f"menu() argument 'cursor_color' expects str or tuple, not {type(cursor_color).__name__}"
@@ -95,21 +106,19 @@ def menu(
             ansi_cursor_color = ansi(cursor_color, rgb=True, bg=True)
         else:
             raise ValueError(
-                "invalid RGB values for menu() argument 'cursor_color'"
+                "menu() argument 'cursor_color' has invalid RGB values"
             )
     elif(type(cursor_color) is str and cursor_color.removeprefix("light_") in DEFAULT_COLORS):
         ansi_cursor_color = ansi(cursor_color, bg=True)
     else:
         raise ValueError(
-            "invalid color for menu() argument 'cursor_color'"
+            "menu() argument 'cursor_color' has an invalid color"
         )
-
 
     if(not isinstance(options_color, Sequence) and options_color is not None):
         raise TypeError(
             f"menu() argument 'options_color' expects str, list, tuple or None, not {type(options_color).__name__}"
         )
-
     elif(options_color is None):
         multiple_colors_for_options = False
         ansi_options_color = ""
@@ -124,9 +133,8 @@ def menu(
             ansi_options_color = ansi(options_color, rgb=True, bg=False)
         else:
             raise ValueError(
-                "invalid RGB values for menu() argument 'options_color'"
+                "menu() argument 'options_color' has invalid RGB values"
             )
-
     elif(type(options_color) in (list, tuple)):
         if(all(((type(color) is str and color.removeprefix("light_") in DEFAULT_COLORS)
                 or (type(color) is tuple and len(color) == 3 and all(type(rgb_value) is int and 0 <= rgb_value < 256 for rgb_value in color))
@@ -152,13 +160,12 @@ def menu(
                 )
         else:
             raise ValueError(
-                "invalid sequence of color for menu() argument 'options_color'"
+                "menu() argument 'options_color' has an invalid sequence of color"
             )
     else:
         raise ValueError(
-            "invalid color for menu() argument 'options_color'"
+            "menu() argument 'options_color' has an invalid color"
         )
-
 
     if(type(initial_cursor_position) is int):
         if(-len(options) <= initial_cursor_position < len(options)):

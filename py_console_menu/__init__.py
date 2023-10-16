@@ -14,8 +14,8 @@ def menu(
     options: list[str] | tuple[str, ...],
     cursor_color: str | tuple[int, int, int],
     options_color: str | tuple[int, int, int] | Sequence[str | tuple[int, int, int] | None] | None = None,
-    initial_cursor_position: str | int = 0,
-) -> str:
+    initial_cursor_position: int = 0,
+) -> int:
 
     """Creates a pretty menu in console. Use arrow keys to move the cursor and enter key to select an option.
     Clears console once an option is selected.
@@ -28,11 +28,11 @@ def menu(
         - options_color (optional): color of options text, available colors are the same as `cursor_color`,
         customize the color of every options separately by providing a list of colors,
         each color will be associated with the option of the corresponding index.
-        - initial_cursor_position (optional): index of element or element in `options` where the initial cursor position is set
+        - initial_cursor_position (optional): index of element in `options` where the initial cursor position is set
         (default position is first element).
 
     Returns:
-       - selected_option: element from `options` selected by the user.
+       - selected_option: index of element from `options` selected by the user.
     """
     class Keys:
         UP = 'H'

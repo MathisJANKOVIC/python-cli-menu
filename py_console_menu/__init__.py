@@ -1,19 +1,18 @@
 from typing import Sequence
-import platform
-import msvcrt
 import sys
 import os
 
-if(sys.platform != 'win32'):
-    raise RuntimeError(
-        f"{platform.system()} is currently not supported"
-    )
+if(os.name == 'nt'):
+    import msvcrt
+else:
+    import termios
+    import tty
 
 def menu(
-    title: str | Sequence[str],
-    options: list[str] | tuple[str, ...],
-    cursor_color: str | tuple[int, int, int],
-    options_color: str | tuple[int, int, int] | Sequence[str | tuple[int, int, int] | None] | None = None,
+    title: str ,
+    options: list[str] ,
+    cursor_color: str ,
+    options_color: str = None,
     initial_cursor_position: int = 0,
 ) -> int:
 
@@ -35,13 +34,13 @@ def menu(
        - selected_option: index of element from `options` selected by the user.
     """
     class Keys:
-        UP = 'H'
-        DOWN = 'P'
+        UP = ['H', '\x1b[A']
+        DOWN = ['P', '\x1b[B']
         SELECT = '\r'
 
     DEFAULT_COLORS = ("default", "red", "green", "yellow", "blue", "magenta", "cyan", "white")
 
-    def ansi(color: str | tuple[int, int, int], bg: bool, rgb: bool = False):
+    def ansi(color: str , bg: bool, rgb: bool = False):
         if(rgb):
             if(bg):
                 return f"\033[48;2;{color[0]};{color[1]};{color[2]}m"
@@ -94,7 +93,7 @@ def menu(
         )
     elif(len(options) + 3 >= TERMINAL_HEIGHT):
         raise RuntimeError(
-            "terminal height is too low to display all options, resize your terminal or reduce the number of options"
+           "terminal height is too low to display all options, resize your terminal or reduce the number of options"
         )
 
     if(type(cursor_color) not in (str, tuple)):
@@ -186,7 +185,13 @@ def menu(
             f"menu() argument 'initial_cursor_position' expects int or str, not {type(initial_cursor_position).__name__}"
         )
 
-    os.system("cls")
+    if(os.name == 'nt'):
+        os.system("cls")
+    else:
+        os.system("clear")
+        fd = sys.stdin.fileno()
+        original_settings = termios.tcgetattr(fd)
+
     sys.stdout.write("\033[?25l") # Hides cursor
 
     if(type(title) is str):
@@ -213,14 +218,28 @@ def menu(
                 else:
                     print(" " + ansi_options_color + option.center(TERMINAL_WIDTH - 1) + "\033[0m")
 
-        key = msvcrt.getwch()
+        if(os.name == 'nt'):
+            key = msvcrt.getwch()
+        else:
+            tty.setraw(fd)
+            char1 = sys.stdin.read(3)
 
-        if(key == Keys.UP):
+            if(char1 == '\x1b'):
+                char2 = sys.stdin.read(1)
+                char3 = sys.stdin.read(1)
+
+                key = char1 + char2 + char3
+            else:
+                key = char1
+
+            termios.tcsetattr(fd, termios.TCSADRAIN, original_settings)
+
+        if(key in Keys.UP):
             if(cursor_height > VERTICAL_SPACING):
                 cursor_height = cursor_height - 1
             else:
                 cursor_height = VERTICAL_SPACING + len(options) - 1
-        elif(key == Keys.DOWN):
+        elif(key in Keys.DOWN):
             if(cursor_height < VERTICAL_SPACING + len(options) - 1):
                 cursor_height = cursor_height + 1
             else:
@@ -229,6 +248,6 @@ def menu(
         sys.stdout.write('\033[F' * len(options))
 
     sys.stdout.write("\033[?25h") # show cursor
-    os.system("cls")
+    os.system("cls" if os.name == 'nt' else "clear")
 
     return options[cursor_height - VERTICAL_SPACING]

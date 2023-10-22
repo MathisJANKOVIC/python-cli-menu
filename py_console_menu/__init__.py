@@ -5,14 +5,14 @@ import os
 if(os.name == 'nt'):
     import msvcrt
 else:
-    import termios
     import tty
+    import termios
 
 def menu(
-    title: str ,
-    options: list[str] ,
-    cursor_color: str ,
-    options_color: str = None,
+    title: str | Sequence[str],
+    options: list[str] | tuple[str, ...],
+    cursor_color: str | tuple[int, int, int],
+    options_color: str | tuple[int, int, int] | Sequence[str | tuple[int, int, int] | None] | None = None,
     initial_cursor_position: int = 0,
 ) -> int:
 
@@ -34,13 +34,20 @@ def menu(
        - selected_option: index of element from `options` selected by the user.
     """
     class Keys:
-        UP = ['H', '\x1b[A']
-        DOWN = ['P', '\x1b[B']
         SELECT = '\r'
+        UP = {"nt": 'H', "posix": "\x1b[A"}
+        DOWN = {"nt": 'P', "posix": "\x1b[B"}
+
+    if(os.name == "posix"):
+        file_descriptor = sys.stdin.fileno()
+        default_setting = termios.tcgetattr(file_descriptor)
+
+    TERMINAL_HEIGHT = os.get_terminal_size().lines
+    TERMINAL_WIDTH = os.get_terminal_size().columns
 
     DEFAULT_COLORS = ("default", "red", "green", "yellow", "blue", "magenta", "cyan", "white")
 
-    def ansi(color: str , bg: bool, rgb: bool = False):
+    def ansi(color: str | tuple[int, int, int], bg: bool, rgb: bool = False):
         if(rgb):
             if(bg):
                 return f"\033[48;2;{color[0]};{color[1]};{color[2]}m"
@@ -77,13 +84,10 @@ def menu(
         raise ValueError(
             "menu() argument 'options' cannot be empty"
         )
-    elif(any(type(element) is not str for element in options)):
+    elif(any(type(option) is not str for option in options)):
         raise TypeError(
             "all elements of menu() argument 'options' must be str"
         )
-
-    TERMINAL_HEIGHT = os.get_terminal_size().lines
-    TERMINAL_WIDTH = os.get_terminal_size().columns
 
     VERTICAL_SPACING = (TERMINAL_HEIGHT - len(options)) // 2
 
@@ -185,13 +189,7 @@ def menu(
             f"menu() argument 'initial_cursor_position' expects int or str, not {type(initial_cursor_position).__name__}"
         )
 
-    if(os.name == 'nt'):
-        os.system("cls")
-    else:
-        os.system("clear")
-        fd = sys.stdin.fileno()
-        original_settings = termios.tcgetattr(fd)
-
+    os.system("cls" if os.name == 'nt' else "clear")
     sys.stdout.write("\033[?25l") # Hides cursor
 
     if(type(title) is str):
@@ -221,25 +219,24 @@ def menu(
         if(os.name == 'nt'):
             key = msvcrt.getwch()
         else:
-            tty.setraw(fd)
-            char1 = sys.stdin.read(3)
+            tty.setraw(file_descriptor)
+            key = sys.stdin.read(1)
 
-            if(char1 == '\x1b'):
+            if(key == '\x1b'):
                 char2 = sys.stdin.read(1)
                 char3 = sys.stdin.read(1)
 
-                key = char1 + char2 + char3
-            else:
-                key = char1
+                key = key + char2 + char3
 
-            termios.tcsetattr(fd, termios.TCSADRAIN, original_settings)
+            termios.tcsetattr(file_descriptor, termios.TCSADRAIN, default_setting)
 
-        if(key in Keys.UP):
+        if(key == Keys.UP[os.name]):
             if(cursor_height > VERTICAL_SPACING):
                 cursor_height = cursor_height - 1
             else:
                 cursor_height = VERTICAL_SPACING + len(options) - 1
-        elif(key in Keys.DOWN):
+
+        elif(key == Keys.DOWN[os.name]):
             if(cursor_height < VERTICAL_SPACING + len(options) - 1):
                 cursor_height = cursor_height + 1
             else:

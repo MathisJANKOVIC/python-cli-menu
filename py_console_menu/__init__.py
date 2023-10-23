@@ -17,21 +17,18 @@ def menu(
 ) -> int:
 
     """Creates a pretty menu in console. Use arrow keys to move the cursor and enter key to select an option.
-    Clears console once an option is selected.
+    Clears console once an option is selected and returns the index of the selected options.
 
     Args:
-        - title: main title of the menu, can be displayed on multiple lines if a list or a tuple is passed.
-        - options: list of elements that can be selected by the user.
+        - title: title of the menu, can be displayed on multiple lines if a list or a tuple is passed.
+        - options: list of elements which can be selected by the user.
         - cursor_color: color of the cursor, available colors are `red`, `green`, `yellow`, `blue`, `magenta`, `cyan`, `white`
         and their lighter versions (e.g. `light_red`), use custom color by providing a tuple containing color RGB values.
         - options_color (optional): color of options text, available colors are the same as `cursor_color`,
         customize the color of every options separately by providing a list of colors,
         each color will be associated with the option of the corresponding index.
-        - initial_cursor_position (optional): index of element in `options` where the initial cursor position is set
+        - initial_cursor_position (optional): index of option where the initial cursor position is set
         (default position is first element).
-
-    Returns:
-       - selected_option: index of element from `options` selected by the user.
     """
     class Keys:
         SELECT = '\r'

@@ -22,8 +22,8 @@ def menu(
     Args:
         - title: main title of the menu, can be displayed on multiple lines if a list or a tuple is passed.
         - options: list of elements that can be selected by the user.
-        - cursor_color: color of the cursor, available colors are `red`, `green`, `yellow`, `blue`, `magenta`, `cyan`, `white` and their lighter versions (e.g. `light_red`),
-        use custom color by providing a tuple containing color RGB values.
+        - cursor_color: color of the cursor, available colors are `red`, `green`, `yellow`, `blue`, `magenta`, `cyan`, `white`
+        and their lighter versions (e.g. `light_red`), use custom color by providing a tuple containing color RGB values.
         - options_color (optional): color of options text, available colors are the same as `cursor_color`,
         customize the color of every options separately by providing a list of colors,
         each color will be associated with the option of the corresponding index.
@@ -89,16 +89,12 @@ def menu(
             "all elements of menu() argument 'options' must be str"
         )
 
-    VERTICAL_SPACING = (TERMINAL_HEIGHT - len(options)) // 2
+    if(type(title) is str and TERMINAL_HEIGHT < len(options) + 4 or type(title) in (list, tuple) and TERMINAL_HEIGHT < len(title) + len(options) + 2):
+        raise RuntimeError(
+           "terminal height is too low to display the menu, resize your terminal or reduce the number of options"
+        )
 
-    if(type(title) is str and len(options) + 3 >= TERMINAL_HEIGHT):
-        raise RuntimeError(
-           "terminal height is too low to display all options, resize your terminal or reduce the number of options"
-        )
-    elif(len(options) + 3 >= TERMINAL_HEIGHT):
-        raise RuntimeError(
-           "terminal height is too low to display all options, resize your terminal or reduce the number of options"
-        )
+    VERTICAL_SPACING = (TERMINAL_HEIGHT - len(options)) // 2
 
     if(type(cursor_color) not in (str, tuple)):
         raise TypeError(

@@ -3,6 +3,7 @@ import sys
 import os
 
 if(os.name == 'nt'):
+    import ctypes
     import msvcrt
 else:
     import tty
@@ -27,17 +28,26 @@ def menu(
         - options_color (optional): color of options text, available colors are the same as `cursor_color`,
         customize the color of every options separately by providing a list of colors,
         each color will be associated with the option of the corresponding index.
-        - initial_cursor_position (optional): index of option where the initial cursor position is set
-        (default position is first element).
+        - initial_cursor_position (optional): index of option where the initial cursor position is set (default position is first element).
     """
+
     class Keys:
         SELECT = '\r'
         UP = {"nt": 'H', "posix": "\x1b[A"}
         DOWN = {"nt": 'P', "posix": "\x1b[B"}
 
-    if(os.name == "posix"):
-        file_descriptor = sys.stdin.fileno()
-        default_setting = termios.tcgetattr(file_descriptor)
+    if(os.name == 'nt'):
+        class CursorInfo(ctypes.Structure):
+            _fields_ = [
+                ("size", ctypes.c_int),
+                ("visible", ctypes.c_byte)
+            ]
+
+        cursor_info = CursorInfo()
+        STD_OUTPUT_HANDLE = ctypes.windll.kernel32.GetStdHandle(-11)
+    else:
+        FILE_DESCRIPTOR = sys.stdin.fileno()
+        default_setting = termios.tcgetattr(FILE_DESCRIPTOR)
 
     TERMINAL_HEIGHT = os.get_terminal_size().lines
     TERMINAL_WIDTH = os.get_terminal_size().columns
@@ -182,8 +192,15 @@ def menu(
             f"menu() argument 'initial_cursor_position' expects int or str, not {type(initial_cursor_position).__name__}"
         )
 
-    os.system("cls" if os.name == 'nt' else "clear")
-    sys.stdout.write("\033[?25l") # Hides cursor
+    if(os.name == 'nt'):
+        ctypes.windll.kernel32.GetConsoleCursorInfo(STD_OUTPUT_HANDLE, ctypes.byref(cursor_info))
+        cursor_info.visible = False
+        ctypes.windll.kernel32.SetConsoleCursorInfo(STD_OUTPUT_HANDLE, ctypes.byref(cursor_info))
+
+        os.system("cls")
+    else:
+        sys.stdout.write("\033[?25l")
+        os.system("clear")
 
     if(type(title) is str):
         print('\n'*(VERTICAL_SPACING - 3))
@@ -212,7 +229,7 @@ def menu(
         if(os.name == 'nt'):
             key = msvcrt.getwch()
         else:
-            tty.setraw(file_descriptor)
+            tty.setraw(FILE_DESCRIPTOR)
             key = sys.stdin.read(1)
 
             if(key == '\x1b'):
@@ -221,7 +238,7 @@ def menu(
 
                 key = key + char2 + char3
 
-            termios.tcsetattr(file_descriptor, termios.TCSADRAIN, default_setting)
+            termios.tcsetattr(FILE_DESCRIPTOR, termios.TCSADRAIN, default_setting)
 
         if(key == Keys.UP[os.name]):
             if(cursor_height > VERTICAL_SPACING):
@@ -237,7 +254,12 @@ def menu(
 
         sys.stdout.write('\033[F' * len(options))
 
-    sys.stdout.write("\033[?25h") # show cursor
-    os.system("cls" if os.name == 'nt' else "clear")
+    if(os.name == 'nt'):
+        os.system("cls")
+        cursor_info.visible = True
+        ctypes.windll.kernel32.SetConsoleCursorInfo(STD_OUTPUT_HANDLE, ctypes.byref(cursor_info))
+    else:
+        os.system("clear")
+        sys.stdout.write("\033[?25h")
 
-    return options[cursor_height - VERTICAL_SPACING]
+    return cursor_height - VERTICAL_SPACING

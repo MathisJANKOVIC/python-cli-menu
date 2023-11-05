@@ -1,6 +1,6 @@
-# Py-Console-Menu
+# py-cli-menu
 
-Py-Console-Menu is a Python module for Windows that allows you to easilly create a pretty custom menu in console. Customize the title, options, all colors, initial cursor position and much more. Use arrows keys to navigate through the menu and enter key to select an option.
+py-cli-menu is a cross-plateform Python module that allows you to easilly create pretty custom menu in console. Customize the title, options, every colors and initial cursor position as you want. Use arrows keys to navigate through the menu and enter key to select an option.
 
 ![menu screen](images/screen_menu.png)
 
@@ -11,7 +11,14 @@ def menu(
     title: str | Sequence[str],
     options: list[str] | tuple[str, ...],
     cursor_color: str | tuple[int, int, int],
-    options_color: str | tuple[int, int, int] | Sequence[str | tuple[int, int, int] | None] | None = None,
+    title_color: (
+        str | tuple[int, int, int] | None |
+        Sequence[str | tuple[int, int, int] | None]
+    ) = None,
+    options_color: (
+        str | tuple[int, int, int] | None |
+        Sequence[str | tuple[int, int, int] | None]
+    ) = None,
     initial_cursor_position: int = 0,
 ) -> int:
 ```

@@ -1,9 +1,9 @@
 from .climenu import menu
-import platform
+import sys
 
-__python_version = platform.python_version_tuple()
+__all__ = ["menu"]
 
-if(int(__python_version[0]) != 3 or int(__python_version[1]) < 10):
+if(sys.version_info < (3, 10)):
     raise RuntimeError(
         "Python 3.10 or a newer version is required"
     )

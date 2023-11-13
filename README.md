@@ -1,9 +1,19 @@
 # py-cli-menu
+<img src="https://img.shields.io/badge/version-1.0-darkred" alt="Issues Badge"/>
+<img src="https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12-blue" alt="Issues Badge"/>
+<img src="https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20MacOS-lightgray"/>
+<img src="https://img.shields.io/badge/license-MIT-yellow"/>
+<img src="https://img.shields.io/github/contributors/MathisJANKOVIC/py-cli-menu?color=darkgreen"/>
 
-py-cli-menu is a cross-plateform Python module that allows you to easilly create pretty custom menu in console. Customize the title, options, every colors and initial cursor position as you want. Use arrows keys to navigate through the menu and enter key to select an option.
+
+py-cli-menu is a simple cross-plateform Python module that allows you to easilly create pretty custom menus in console. Customize the title, options, every colors and initial cursor position as you wish. Use arrows keys to navigate through the menu and enter key to select an option.
 
 ![menu screen](images/screen_menu.png)
 
+## Setup
+```
+python -m pip install py-cli-menu
+```
 ## Quickstart
 
 ```python
@@ -49,13 +59,3 @@ choice3: str = menu("Amazing Console Menu", OPTIONS, "red", initial_cursor_posit
 # Creates a console menu with yellow cursor and returns the index of selected option
 choice4: int = menu("Amazing Console Menu", OPTIONS, "yellow", ouput_format=int)
 ```
-## Requirements
-- Windows
-- Python 3.10+
-
-## Configuration
-
-To use the library, simply download `console_menu.py` and place it in your project directory. Alternatively, you can move the file to your Python library directory, allowing you to use the module in any project. Here are common locations for the library directory, where `XX` stands for your Python version :
-
-- `C:\Program Files\PythonXX\Lib`
-- `C:\Users\Username\AppData\Local\Programs\Python\PythonXX\Lib`

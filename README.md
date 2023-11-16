@@ -1,19 +1,23 @@
 # py-cli-menu
-<img src="https://img.shields.io/badge/version-1.0-darkred" alt="Issues Badge"/>
-<img src="https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12-blue" alt="Issues Badge"/>
-<img src="https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20MacOS-lightgray"/>
-<img src="https://img.shields.io/badge/license-MIT-yellow"/>
-<img src="https://img.shields.io/github/contributors/MathisJANKOVIC/py-cli-menu?color=darkgreen"/>
 
-
-py-cli-menu is a simple cross-plateform Python module that allows you to easilly create pretty custom menus in console. Customize the title, options, every colors and initial cursor position as you wish. Use arrows keys to navigate through the menu and enter key to select an option.
+`py-cli-menu` is a simple cross-plateform Python module that allows you to easilly create pretty custom menus in console. Customize the title, options, every colors and initial cursor position as you wish. Use arrows keys to navigate through the menu and enter key to select an option.
 
 ![menu screen](images/screen_menu.png)
 
-## Setup
+<p style="display: flex; gap:15px; justify-content: center">
+    <img src="https://img.shields.io/badge/version-1.0-d" alt="version badge"/>
+    <img src="https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12-blue" alt="python version badge"/>
+    <img src="https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20MacOS-lightgray" alt="platform badge"/>
+    <img src="https://img.shields.io/badge/license-MIT-yellow" alt="license badge"/>
+    <img src="https://img.shields.io/github/contributors/MathisJANKOVIC/py-cli-menu?color=darkorange" alt="contributors badges"/>
+</p>
+
+## Installation
+`py-cli-menu` is available on PyPi and can be installed with pip by running :
+```bash
+pip install py-cli-menu
 ```
-python -m pip install py-cli-menu
-```
+
 ## Quickstart
 
 ```python
@@ -32,30 +36,49 @@ def menu(
     initial_cursor_position: int = 0,
 ) -> int:
 ```
-> Creates a console GUI menu with arrow key navigation and returns the selected option. Clears console once an option is selected.
+> Creates a pretty menu in console with arrow key navigation and returns the selected option. Clears console once an option is selected.
 
-- `title` is the main title of the menu, can be displayed on multiple lines if a list or a tuple is passed
-- `options` is the list of actions or choices that can be selected
-- `cursor_color` is the color of the cursor, available colors are `red`, `green`, `yellow`, `blue`, `magenta`, `cyan` and `white`, use custom color by providing a tuple containing color RGB values
-- `intial_cursor_position` is the index of the element or the element in `options` where the initial cursor position is set (default position is first element)
-- `output_format` is the output type of the function, default is `str`, which returns the selected element from `options`, pass `int` to get the index of the selected element
+- `title` is the main title of the menu, can be displayed on multiple lines if a list or a tuple is passed.
+- `options` is the list of actions or choices that can be selected.
+- `cursor_color` is the color of the cursor, available colors are `red`, `green`, `yellow`, `blue`, `magenta`, `cyan`, `white`
+                and their lighter versions (e.g. `light_red`), use custom color by providing a tuple containing color RGB values.
+- `title_color` is the color of the title, available colors are the same as `cursor_color`, customize the color of each line by providing a list of colors,
+                each color will be associated with the line of the corresponding index (default color is terminal text color).
+- `options_color` is the color of options, available colors are the same as `cursor_color`, customize every option color by providing a list of colors,
+                each color will be associated with the option of the corresponding index (default color is terminal text color).
+- `initial_cursor_position` is the index of the option where the initial cursor position is set (default position is first element).
 
 <label style="font-size: 15px;">Examples :</label>
 
 ```python
-from console_menu import menu
+import pyclimenu import menu
 
 OPTIONS = ["Option 1", "Option 2", "Option 3", "Quit"]
 
-# Creates a console menu with blue cursor and title on single line
-choice1: str = menu("Amazing Console Menu", OPTIONS, "blue")
+# Creates a simple console menu with blue cursor
+eg1 = menu(title="Amazing Console Menu", options=OPTIONS, cursor_color="blue")
 
-# Creates a console menu with orange cursor and title on multiple lines
-choice2: str = menu(["Amazing Console", "Menu"], OPTIONS, (255, 102, 0))
+eg2 = menu(
+    title = ["Amazing Console", "Menu"], # displays title on multiple lines
+    options = OPTIONS,
+    cursor_color = (255, 95, 46),
+    title_color = [
+        "blue", # colors "Amazing Console"
+        "light_red" # colors "Menu"
+    ]
+)
 
-# Creates a console menu with red cursor default set on last option
-choice3: str = menu("Amazing Console Menu", OPTIONS, "red", initial_cursor_position=-1)
-
-# Creates a console menu with yellow cursor and returns the index of selected option
-choice4: int = menu("Amazing Console Menu", OPTIONS, "yellow", ouput_format=int)
+eg3 = menu(
+    title = ["Amazing Console", "Menu"], # displays title on multiple lines
+    options = OPTIONS,
+    cursor_color = "yellow",
+    title_color = "light_green", # colors all lines of title
+    options_color = [
+        "magenta", # colors options[0]
+        "light_cyan", # colors options[1]
+        (192, 11, 168) # colors options[2]
+        # option[3] color is not specifed so it will be considered as None
+    ]
+    initial_cursor_position = -1 # sets cursor default position to last option
+)
 ```

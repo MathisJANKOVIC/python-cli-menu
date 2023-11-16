@@ -68,10 +68,10 @@ def menu(
         and their lighter versions (e.g. `light_red`), use custom color by providing a tuple containing color RGB values.
         - title_color (optional): color of the title, available colors are the same as `cursor_color`,
         customize the color of each line separately by providing a list of colors,
-        each color will be associated with the line of the corresponding index.
+        each color will be associated with the line of the corresponding index (default color is terminal text color).
         - options_color (optional): color of options, available colors are the same as `cursor_color`,
         customize the color of every options separately by providing a list of colors,
-        each color will be associated with the option of the corresponding index.
+        each color will be associated with the option of the corresponding index (default color is terminal text color).
         - initial_cursor_position (optional): index of the option where the initial cursor position is set (default position is first element).
     """
 

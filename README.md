@@ -51,7 +51,7 @@ def menu(
 <label style="font-size: 15px;">Examples :</label>
 
 ```python
-import pyclimenu import menu
+from pyclimenu import menu
 
 OPTIONS = ["Option 1", "Option 2", "Option 3", "Quit"]
 
@@ -72,7 +72,7 @@ eg3 = menu(
     title = ["Amazing Console", "Menu"], # displays title on multiple lines
     options = OPTIONS,
     cursor_color = "yellow",
-    title_color = "light_green", # colors all lines of title
+    title_color = "light_green", # colors all lines of the title
     options_color = [
         "magenta", # colors options[0]
         "light_cyan", # colors options[1]

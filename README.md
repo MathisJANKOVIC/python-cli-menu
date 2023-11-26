@@ -4,7 +4,7 @@
 
 ![menu screen](images/screen_menu.png)
 
-<p style="display: flex; gap:15px; justify-content: center">
+<p align="center">
     <img src="https://img.shields.io/badge/version-1.0-d" alt="version badge"/>
     <img src="https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12-blue" alt="python version badge"/>
     <img src="https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20MacOS-lightgray" alt="platform badge"/>

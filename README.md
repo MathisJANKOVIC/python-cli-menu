@@ -6,7 +6,7 @@
 
 <p align="center">
     <img src="https://img.shields.io/badge/version-1.0-d" alt="version badge"/>
-    <img src="https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12-blue" alt="python version badge"/>
+    <img src="https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12%20%7C%203.13-blue" alt="python version badge"/>
     <img src="https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20MacOS-lightgray" alt="platform badge"/>
     <img src="https://img.shields.io/badge/license-MIT-yellow" alt="license badge"/>
     <img src="https://img.shields.io/github/contributors/MathisJANKOVIC/py-cli-menu?color=darkorange" alt="contributors badges"/>

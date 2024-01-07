@@ -36,7 +36,7 @@ def menu(
     initial_cursor_position: int = 0,
 ) -> int:
 ```
-> Creates a pretty menu in console with arrow key navigation and returns the selected option. Clears console once an option is selected.
+> Creates a pretty menu in console with arrow key navigation and returns the index of the selected option. Clears console once an option is selected.
 
 - `title` is the main title of the menu, can be displayed on multiple lines if a list or a tuple is passed.
 - `options` is the list of actions or choices that can be selected.

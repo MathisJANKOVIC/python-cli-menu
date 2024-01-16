@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="py-cli-menu",
+    name="python-cli-menu",
     version='1.0',
     license="MIT",
     author="Rasting (Mathis Jankovic)",

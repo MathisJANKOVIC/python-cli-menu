@@ -1,6 +1,6 @@
-# py-cli-menu
+# python-cli-menu
 
-`py-cli-menu` is a simple cross-plateform Python module that allows you to easilly create pretty custom menus in console. Customize the title, options, every colors and initial cursor position as you wish. Use arrows keys to navigate through the menu and enter key to select an option.
+`python-cli-menu` is a simple cross-plateform Python module that allows you to easilly create pretty custom menus in console. Customize the title, options, every colors and initial cursor position as you wish. Use arrows keys to navigate through the menu and enter key to select an option.
 
 ![menu screen](menu.png)
 
@@ -9,13 +9,13 @@
     <img src="https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12%20-blue" alt="python version badge"/>
     <img src="https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20MacOS-lightgray" alt="platform badge"/>
     <img src="https://img.shields.io/badge/license-MIT-yellow" alt="license badge"/>
-    <img src="https://img.shields.io/github/contributors/MathisJANKOVIC/py-cli-menu?color=darkorange" alt="contributors badges"/>
+    <img src="https://img.shields.io/github/contributors/MathisJANKOVIC/python-cli-menu?color=darkorange" alt="contributors badges"/>
 </p>
 
 ## Installation
-`py-cli-menu` is available on PyPi and can be installed with pip by running :
+`python-cli-menu` is available on PyPi and can be installed with pip by running :
 ```bash
-pip install py-cli-menu
+pip install python-cli-menu
 ```
 
 ## Quickstart
@@ -51,7 +51,7 @@ def menu(
 <label style="font-size: 15px;">Examples :</label>
 
 ```python
-from pyclimenu import menu
+from pythonclimenu import menu
 
 OPTIONS = ["Option 1", "Option 2", "Option 3", "Quit"]
 

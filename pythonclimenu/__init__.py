@@ -1,4 +1,4 @@
-from .climenu import menu
+from .menu import menu
 import sys
 
 __all__ = ["menu"]

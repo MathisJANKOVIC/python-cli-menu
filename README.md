@@ -2,11 +2,11 @@
 
 `py-cli-menu` is a simple cross-plateform Python module that allows you to easilly create pretty custom menus in console. Customize the title, options, every colors and initial cursor position as you wish. Use arrows keys to navigate through the menu and enter key to select an option.
 
-![menu screen](images/screen_menu.png)
+![menu screen](menu.png)
 
 <p align="center">
     <img src="https://img.shields.io/badge/version-1.0-d" alt="version badge"/>
-    <img src="https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12%20%7C%203.13-blue" alt="python version badge"/>
+    <img src="https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12%20-blue" alt="python version badge"/>
     <img src="https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20MacOS-lightgray" alt="platform badge"/>
     <img src="https://img.shields.io/badge/license-MIT-yellow" alt="license badge"/>
     <img src="https://img.shields.io/github/contributors/MathisJANKOVIC/py-cli-menu?color=darkorange" alt="contributors badges"/>
@@ -56,23 +56,23 @@ from pyclimenu import menu
 OPTIONS = ["Option 1", "Option 2", "Option 3", "Quit"]
 
 # Creates a simple console menu with blue cursor
-eg1 = menu(title="Amazing Console Menu", options=OPTIONS, cursor_color="blue")
+menu1 = menu(title="Amazing Console Menu", options=OPTIONS, cursor_color="blue")
 
-eg2 = menu(
+menu2 = menu(
     title = ["Amazing Console", "Menu"], # displays title on multiple lines
     options = OPTIONS,
-    cursor_color = (255, 95, 46),
+    cursor_color = (255, 95, 46), # sets the cursor color using RGB values
     title_color = [
         "blue", # colors "Amazing Console"
-        "light_red" # colors "Menu"
+        "light_red" # olors "Menu"
     ]
 )
 
-eg3 = menu(
+menu3 = menu(
     title = ["Amazing Console", "Menu"], # displays title on multiple lines
     options = OPTIONS,
     cursor_color = "yellow",
-    title_color = "light_green", # colors all lines of the title
+    title_color = "light_green", # colors all lines of title
     options_color = [
         "magenta", # colors options[0]
         "light_cyan", # colors options[1]

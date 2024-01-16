@@ -59,7 +59,7 @@ def menu(
 ) -> int:
 
     """Creates a pretty menu in console. Use arrow keys to move the cursor and enter key to select an option.
-    Clears console once an option is selected and returns the index of the selected options.
+    Clears console once an option is selected and returns the index of the selected option.
 
     Args:
         - title: title of the menu, can be displayed on multiple lines if a list or a tuple is passed.
@@ -289,10 +289,10 @@ def menu(
             key = sys.stdin.read(1)
 
             if(key == '\x1b'):
-                char2 = sys.stdin.read(1)
-                char3 = sys.stdin.read(1)
+                key2 = sys.stdin.read(1)
+                key3 = sys.stdin.read(1)
 
-                key = key + char2 + char3
+                key = key + key2 + key3
 
             termios.tcsetattr(_FILE_DESCRIPTOR, termios.TCSADRAIN, _DEFAULT_TERMINAL_SETTING)
 

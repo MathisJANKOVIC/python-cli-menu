@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="python-cli-menu",
-    version='1.0',
+    version='1.1',
     license="MIT",
     author="Rasting (Mathis Jankovic)",
     author_email="mathis.jankovic@gmail.com",

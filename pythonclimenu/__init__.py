@@ -1,7 +1,7 @@
-from .menu import menu
+from .climenu import menu
 import sys
 
-__all__ = ["menu"]
+__all__ = ["climenu"]
 
 if(sys.version_info < (3, 10)):
     raise RuntimeError(

@@ -3,12 +3,14 @@ from setuptools import setup, find_packages
 with open("README.md", "r", encoding="utf-8") as readme_file:
     readme_content = readme_file.readlines()
 
-del readme_content[14:20] # remove installation part
+del readme_content[4:20] # remove screen, badges and installation part
+del readme_content[0:2] # remove title
+
 long_description = "".join(readme_content)
 
 setup(
     name = "python-cli-menu",
-    version = '1.1',
+    version = '1.3',
     license = "MIT",
     author = "Rasting (Mathis Jankovic)",
     author_email = "mathis.jankovic@gmail.com",

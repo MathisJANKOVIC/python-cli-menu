@@ -231,16 +231,9 @@ def menu(
             raise ValueError(
                 f"'{initial_cursor_position}' is not an index of menu() argument 'options'"
                 )
-    elif(type(initial_cursor_position) is str):
-        if(initial_cursor_position in options):
-            cursor_height = vertical_spacing + options.index(initial_cursor_position)
-        else:
-            raise ValueError(
-                f"'{initial_cursor_position}' is not an element of menu() argument 'options'"
-            )
     else:
         raise TypeError(
-            f"menu() argument 'initial_cursor_position' expects int or str, not {type(initial_cursor_position).__name__}"
+            f"menu() argument 'initial_cursor_position' expects int, not {type(initial_cursor_position).__name__}"
         )
 
     if(os.name == 'nt'):

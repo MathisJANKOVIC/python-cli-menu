@@ -10,7 +10,7 @@ long_description = "".join(readme_content)
 
 setup(
     name = "python-cli-menu",
-    version = '1.3',
+    version = '1.4',
     license = "MIT",
     author = "Rasting (Mathis Jankovic)",
     author_email = "mathis.jankovic@gmail.com",

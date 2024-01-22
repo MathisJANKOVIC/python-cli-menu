@@ -5,7 +5,7 @@
 ![menu screen](menu.png)
 
 <p align="center">
-    <img src="https://img.shields.io/badge/version-1.4-d" alt="version badge"/>
+    <img src="https://img.shields.io/badge/version-1.6-d" alt="version badge"/>
     <img src="https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12%20-blue" alt="python version badge"/>
     <img src="https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20MacOS-lightgray" alt="platform badge"/>
     <img src="https://img.shields.io/badge/license-MIT-yellow" alt="license badge"/>
@@ -33,10 +33,10 @@ def menu(
         str | tuple[int, int, int] | None |
         Sequence[str | tuple[int, int, int] | None]
     ) = None,
-    initial_cursor_position: int = 0,
-) -> int:
+    initial_cursor_position: str | int = 0,
+) -> str:
 ```
-> Creates a pretty menu in console with arrow key navigation and returns the index of the selected option. Clears console once an option is selected.
+> Creates a pretty menu in console with arrow key navigation and returns the selected option. Clears console once an option is selected.
 
 - `title` is the main title of the menu, can be displayed on multiple lines if a list or a tuple is passed.
 - `options` is the list of actions or choices that can be selected.
@@ -46,7 +46,7 @@ def menu(
                 each color will be associated with the line of the corresponding index (default color is terminal text color).
 - `options_color` is the color of options, available colors are the same as `cursor_color`, customize every option color by providing a list of colors,
                 each color will be associated with the option of the corresponding index (default color is terminal text color).
-- `initial_cursor_position` is the index of the option where the initial cursor position is set (default position is first element).
+- `initial_cursor_position` is the option or the index of the option where the initial cursor position is set (default position is first element).
 
 <label style="font-size: 15px;">Examples :</label>
 

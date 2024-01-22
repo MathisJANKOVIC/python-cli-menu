@@ -55,11 +55,10 @@ def menu(
     cursor_color: str | tuple[int, int, int],
     title_color: str | tuple[int, int, int] | Sequence[str | tuple[int, int, int] | None] | None = None,
     options_color: str | tuple[int, int, int] | Sequence[str | tuple[int, int, int] | None] | None = None,
-    initial_cursor_position: int = 0,
-) -> int:
+    initial_cursor_position: str | int = 0,
+) -> str:
 
-    """Creates a pretty menu in console. Use arrow keys to move the cursor and enter key to select an option.
-    Clears console once an option is selected and returns the index of the selected option.
+    """Creates a pretty menu in console with arrow key navigation and returns the selected option. Clears console once an option is selected.
 
     Args:
         - title: title of the menu, can be displayed on multiple lines if a list or a tuple is passed.
@@ -72,7 +71,7 @@ def menu(
         - options_color (optional): color of options, available colors are the same as `cursor_color`,
         customize the color of every options separately by providing a list of colors,
         each color will be associated with the option of the corresponding index (default color is terminal text color).
-        - initial_cursor_position (optional): index of the option where the initial cursor position is set (default position is first element).
+        - initial_cursor_position (optional): option or index of the option where the initial cursor position is set (default position is first element).
     """
 
     if(not isinstance(title, Sequence)):
@@ -95,6 +94,10 @@ def menu(
     elif(any(type(option) is not str for option in options)):
         raise TypeError(
             "all elements of menu() argument 'options' must be str"
+        )
+    if(len(set(options)) != len(options)):
+        raise ValueError(
+            "menu() argument 'options' cannot contain duplicate elements"
         )
 
     if(type(title) is str and _TERMINAL_HEIGHT < len(options) + 4 or type(title) in (list, tuple) and _TERMINAL_HEIGHT < len(options) + len(title) + 2):
@@ -231,6 +234,13 @@ def menu(
             raise ValueError(
                 f"'{initial_cursor_position}' is not an index of menu() argument 'options'"
                 )
+    elif(type(initial_cursor_position) is str):
+        if(initial_cursor_position in options):
+            cursor_height = vertical_spacing + options.index(initial_cursor_position)
+        else:
+            raise ValueError(
+                f"'{initial_cursor_position}' is not an element of menu() argument 'options'"
+            )
     else:
         raise TypeError(
             f"menu() argument 'initial_cursor_position' expects int, not {type(initial_cursor_position).__name__}"
@@ -311,4 +321,4 @@ def menu(
         os.system("clear")
         sys.stdout.write("\033[?25h")
 
-    return cursor_height - vertical_spacing
+    return options[cursor_height - vertical_spacing]

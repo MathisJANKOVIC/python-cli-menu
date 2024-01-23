@@ -5,7 +5,7 @@
 ![menu screen](menu.png)
 
 <p align="center">
-    <img src="https://img.shields.io/badge/version-1.6-d" alt="version badge"/>
+    <img src="https://img.shields.io/badge/version-1.7-d" alt="version badge"/>
     <img src="https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12%20-blue" alt="python version badge"/>
     <img src="https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20MacOS-lightgray" alt="platform badge"/>
     <img src="https://img.shields.io/badge/license-MIT-yellow" alt="license badge"/>
@@ -64,8 +64,9 @@ menu2 = menu(
     cursor_color = (255, 95, 46), # sets the cursor color using RGB values
     title_color = [
         "blue", # colors "Amazing Console"
-        "light_red" # olors "Menu"
-    ]
+        "light_red" # colors "Menu"
+    ],
+    initial_cursor_position = -1 # sets cursor default position to 'Quit'
 )
 
 menu3 = menu(
@@ -78,7 +79,7 @@ menu3 = menu(
         "light_cyan", # colors options[1]
         (192, 11, 168) # colors options[2]
         # option[3] color is not specifed so it will be considered as None
-    ]
-    initial_cursor_position = -1 # sets cursor default position to last option
+    ],
+    initial_cursor_position = OPTIONS[1] # sets cursor default position to 'Option 1'
 )
 ```

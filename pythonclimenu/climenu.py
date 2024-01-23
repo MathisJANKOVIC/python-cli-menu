@@ -243,7 +243,7 @@ def menu(
             )
     else:
         raise TypeError(
-            f"menu() argument 'initial_cursor_position' expects int, not {type(initial_cursor_position).__name__}"
+            f"menu() argument 'initial_cursor_position' expects str or int, not {type(initial_cursor_position).__name__}"
         )
 
     if(os.name == 'nt'):

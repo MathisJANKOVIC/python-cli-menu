@@ -25,8 +25,6 @@ class _Keys:
     UP = {"nt": 'H', "posix": "\x1b[A"}
     DOWN = {"nt": 'P', "posix": "\x1b[B"}
 
-_TERMINAL_HEIGHT = os.get_terminal_size().lines
-_TERMINAL_WIDTH = os.get_terminal_size().columns
 
 _DEFAULT_COLORS = ("default", "red", "green", "yellow", "blue", "magenta", "cyan", "white")
 
@@ -73,6 +71,9 @@ def menu(
         each color will be associated with the option of the corresponding index (default color is terminal text color).
         - initial_cursor_position (optional): option or index of the option where the initial cursor position is set (default position is first element).
     """
+
+    _TERMINAL_HEIGHT = os.get_terminal_size().lines
+    _TERMINAL_WIDTH = os.get_terminal_size().columns
 
     if(not isinstance(title, Sequence)):
         raise TypeError(

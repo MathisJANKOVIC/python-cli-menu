@@ -17,9 +17,6 @@ else:
     import tty
     import termios
 
-    _FILE_DESCRIPTOR = sys.stdin.fileno()
-    _DEFAULT_TERMINAL_SETTING = termios.tcgetattr(_FILE_DESCRIPTOR)
-
 class _Keys:
     SELECT = '\r'
     UP = {"nt": 'H', "posix": "\x1b[A"}
@@ -255,6 +252,9 @@ def menu(
 
         os.system("cls")
     else:
+        _FILE_DESCRIPTOR = sys.stdin.fileno()
+        _DEFAULT_TERMINAL_SETTING = termios.tcgetattr(_FILE_DESCRIPTOR)
+
         sys.stdout.write("\033[?25l")
         os.system("clear")
 
